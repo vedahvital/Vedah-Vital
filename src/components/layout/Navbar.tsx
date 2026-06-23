@@ -139,7 +139,7 @@ export const Navbar: React.FC = () => {
                 className="flex items-center gap-2.5 font-display text-xl font-medium tracking-wide border-b border-[rgba(10, 25, 47,0.1)] pb-3 text-[var(--color-navy)] lowercase"
               >
                 <ShieldCheckIcon size={20} color="var(--color-navy)" strokeWidth={1.5} />
-                verify batch
+                verify your product
               </Link>
             </nav>
 

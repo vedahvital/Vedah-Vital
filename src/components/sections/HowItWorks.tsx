@@ -34,7 +34,7 @@ export const HowItWorks: React.FC = () => {
             <span className="eyebrow text-[var(--color-navy-deep)]">CERTIFIED TRANSPARENCY</span>
             
             <h2 className="heading-condensed text-4xl md:text-5xl text-[var(--color-heading)] tracking-wide">
-              verify batch reports
+              verify your product
             </h2>
 
             <div className="flex flex-col gap-4 font-sans text-sm md:text-[0.95rem] font-light leading-relaxed text-[var(--color-text)]">

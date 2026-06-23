@@ -118,7 +118,7 @@ export const Verify: React.FC = () => {
         <section className="pt-36 pb-20 text-center relative overflow-hidden bg-[var(--color-navy-light)] border-b border-[rgba(10, 25, 47,0.15)]">
           {/* Watermark - darkened */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-watermark pointer-events-none select-none opacity-65 whitespace-nowrap">
-            verify batch
+            verify your product
           </div>
 
                               <div className="max-w-[var(--max-width)] mx-auto px-6 md:px-12 relative z-10">
