@@ -324,7 +324,7 @@ export const Hero: React.FC = () => {
   return (
     <section 
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center pt-28 pb-16 overflow-hidden bg-white select-none"
+      className="relative min-h-screen flex items-center justify-center pt-28 pb-16 overflow-hidden bg-white"
     >
       {/* 1. Full-Width Background Parallax Layer */}
       <motion.div 
@@ -421,13 +421,24 @@ export const Hero: React.FC = () => {
         <div className="group order-1 lg:order-2 lg:col-span-6 flex justify-center lg:justify-end items-center relative py-8 lg:py-0 z-10">
           <div className="relative w-full max-w-[460px] md:max-w-[500px] h-[460px] min-[380px]:h-[480px] md:h-auto md:aspect-square flex items-center justify-center overflow-visible">
             
-            {/* Carousel Container (Static on hover, parallax on scroll) */}
+            {/* Carousel Container (Static on hover, swipeable on touch/drag) */}
             <motion.div
               style={{ y: yBottle }}
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.9, ease: "easeOut" }}
-              className="relative w-full h-full flex items-center justify-center overflow-visible"
+              className="relative w-full h-full flex items-center justify-center overflow-visible touch-pan-y cursor-grab active:cursor-grabbing"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(_event, info) => {
+                const threshold = 50; // Swipe threshold in pixels
+                if (info.offset.x < -threshold) {
+                  nextSlide();
+                } else if (info.offset.x > threshold) {
+                  prevSlide();
+                }
+              }}
             >
               <AnimatePresence mode="wait">
                 {renderSlideContent(currentSlide)}

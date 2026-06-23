@@ -44,7 +44,7 @@ export const IngredientInfographic: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-[500px] aspect-[4/3.8] flex flex-col gap-4 p-5 md:p-6 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md shadow-2xl relative select-none">
+    <div className="w-full max-w-[500px] aspect-[4/3.8] flex flex-col gap-4 p-5 md:p-6 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md shadow-2xl relative">
       
       {/* Decorative background grid lines */}
       <div className="absolute inset-0 grid grid-cols-6 grid-rows-6 opacity-[0.03] pointer-events-none">

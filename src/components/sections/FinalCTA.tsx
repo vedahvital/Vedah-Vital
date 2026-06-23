@@ -6,7 +6,7 @@ import { Button } from '../ui/Button';
 
 export const FinalCTA: React.FC = () => {
   return (
-    <section className="bg-white text-[var(--color-text)] py-14 md:py-18 relative overflow-hidden border-b border-[rgba(10, 25, 47,0.15)] select-none">
+    <section className="bg-white text-[var(--color-text)] py-14 md:py-18 relative overflow-hidden border-b border-[rgba(10, 25, 47,0.15)]">
       
       {/* Bottom wave backdrop decoration matching reference visual - darkened/more visible */}
       <div className="absolute right-0 bottom-0 w-full lg:w-[45%] h-[80vh] pointer-events-none z-0 opacity-50 text-[var(--color-navy)]">

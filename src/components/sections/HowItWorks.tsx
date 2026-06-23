@@ -7,7 +7,7 @@ import { VerifyInfographic } from '../ui/VerifyInfographic';
 
 export const HowItWorks: React.FC = () => {
   return (
-    <section className="bg-[var(--color-navy)] text-white py-14 md:py-18 relative overflow-hidden border-b border-[rgba(10, 25, 47,0.15)] z-10 select-none">
+    <section className="bg-[var(--color-navy)] text-white py-14 md:py-18 relative overflow-hidden border-b border-[rgba(10, 25, 47,0.15)] z-10">
       
       {/* Background watermark - subtle white */}
       <div className="absolute right-[-5%] top-[10%] text-white opacity-10 pointer-events-none select-none">

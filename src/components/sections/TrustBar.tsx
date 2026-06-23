@@ -15,7 +15,7 @@ export const TrustBar: React.FC = () => {
   const marqueeItems = [...items, ...items, ...items];
 
   return (
-    <section className="bg-white text-[var(--color-navy)] py-5 overflow-hidden select-none border-y border-[rgba(10, 25, 47,0.18)]">
+    <section className="bg-white text-[var(--color-navy)] py-5 overflow-hidden border-y border-[rgba(10, 25, 47,0.18)]">
       <div className="relative w-full flex items-center">
         <div className="flex gap-16 whitespace-nowrap animate-marquee">
           {marqueeItems.map((item, index) => (

@@ -147,7 +147,7 @@
 
   /* LIQUID GLASSMORPHISM CARD */
   .liquid-glass-card {
-    @apply backdrop-blur-[12px] backdrop-saturate-100;
+    @apply backdrop-blur-[16px] backdrop-saturate-100;
     background: linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.35) 0%,
