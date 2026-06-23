@@ -101,13 +101,13 @@ export const Hero: React.FC = () => {
             transition={{ duration: 0.4 }}
             className="w-full h-full flex items-center justify-center p-3"
           >
-            <div className="w-[92%] h-[92%] bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-4.5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
+            <div className="w-[92%] h-[92%] bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-3.5 sm:p-4.5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
               <div className="pb-1.5 border-b border-gray-200 text-center">
                 <span className="font-sans text-xs font-bold tracking-wider uppercase text-[var(--color-navy)]">Active Ingredients</span>
               </div>
 
               {/* Side-by-side ingredient cards */}
-              <div className="flex-1 grid grid-cols-2 gap-3 my-3">
+              <div className="flex-1 grid grid-cols-2 gap-2 sm:gap-3 my-2 sm:my-3">
                 {/* Ashwagandha Card */}
                 <div className="flex flex-col bg-[var(--color-navy)]/5 rounded-2xl border border-[var(--color-navy)]/10 overflow-hidden shadow-sm p-2 text-left">
                   <div className="w-full aspect-[4/3] rounded-xl overflow-hidden shadow-inner border border-white bg-white">
@@ -163,7 +163,7 @@ export const Hero: React.FC = () => {
             transition={{ duration: 0.4 }}
             className="w-full h-full flex items-center justify-center p-4"
           >
-            <div className="w-[90%] h-[90%] bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
+            <div className="w-[90%] h-[90%] bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-4 sm:p-5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
               <div className="pb-2 border-b border-gray-200 text-center">
                 <span className="font-sans text-xs font-bold tracking-wider uppercase text-[var(--color-navy)]">Why KSM-66® Ashwagandha?</span>
               </div>
@@ -232,7 +232,7 @@ export const Hero: React.FC = () => {
             transition={{ duration: 0.4 }}
             className="w-full h-full flex items-center justify-center p-4"
           >
-            <div className="w-[90%] h-[90%] bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
+            <div className="w-[90%] h-[90%] bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-4 sm:p-5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
               <div className="pb-2 border-b border-gray-200 text-center">
                 <span className="font-sans text-xs font-bold tracking-wider uppercase text-[var(--color-navy)]">Clinically Backed Benefits</span>
               </div>
@@ -415,7 +415,7 @@ export const Hero: React.FC = () => {
 
         {/* RIGHT COLUMN: Interactive Product Carousel */}
         <div className="group order-1 lg:order-2 lg:col-span-6 flex justify-center lg:justify-end items-center relative py-8 lg:py-0 z-10">
-          <div className="relative w-[360px] md:w-[500px] aspect-square flex items-center justify-center overflow-visible">
+          <div className="relative w-full max-w-[360px] md:w-[500px] h-[400px] md:h-auto md:aspect-square flex items-center justify-center overflow-visible">
             
             {/* Carousel Container (Static on hover, parallax on scroll) */}
             <motion.div
