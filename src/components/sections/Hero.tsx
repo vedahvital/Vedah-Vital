@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
 import ShieldCheck from '../ui/icons/shield-check';
 import { Button } from '../ui/Button';
@@ -8,7 +8,6 @@ export const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % 5);
@@ -19,12 +18,11 @@ export const Hero: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (isHovered) return;
     const interval = setInterval(() => {
       nextSlide();
     }, 5000);
     return () => clearInterval(interval);
-  }, [isHovered, nextSlide]);
+  }, [nextSlide]);
 
   const renderSlideContent = (slideIndex: number) => {
     switch (slideIndex) {
@@ -41,35 +39,24 @@ export const Hero: React.FC = () => {
             {/* Circular soft halo glow */}
             <div className="absolute w-[80%] h-[80%] rounded-full bg-gradient-to-tr from-[var(--color-navy)]/25 to-white/30 filter blur-2xl opacity-80 z-0" />
 
-            {/* Floating info badge 1 (Claymorphic) */}
-            <motion.div
-              style={{ translateZ: 60 }}
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
-              className="absolute top-[12%] left-[-8%] z-20 clay-card-navy py-3 px-4.5 flex flex-col items-start gap-0.5 pointer-events-none select-none"
-            >
+            {/* Info badge 1 (Claymorphic) */}
+            <div className="absolute top-[12%] left-[-8%] z-20 clay-card-navy py-3 px-4.5 flex flex-col items-start gap-0.5 pointer-events-none select-none">
               <span className="text-[7px] font-sans font-bold tracking-[0.15em] text-[var(--color-navy)] uppercase leading-none">FORMULA TYPE</span>
               <span className="text-[10px] font-sans font-bold text-[var(--color-heading)] uppercase leading-none">5% WITHANOLIDES</span>
-            </motion.div>
+            </div>
 
-            {/* Floating info badge 2 (Glassmorphic) */}
-            <motion.div
-              style={{ translateZ: 80 }}
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
-              className="absolute bottom-[18%] right-[-8%] z-20 glass-card-navy py-3 px-4.5 flex flex-col items-start gap-0.5 pointer-events-none select-none"
-            >
+            {/* Info badge 2 (Glassmorphic) */}
+            <div className="absolute bottom-[18%] right-[-8%] z-20 glass-card-navy py-3 px-4.5 flex flex-col items-start gap-0.5 pointer-events-none select-none">
               <span className="text-[7px] font-sans font-bold tracking-[0.15em] text-[var(--color-navy)] uppercase leading-none font-semibold">PURITY GUARANTEE</span>
               <span className="text-[10px] font-sans font-bold text-[var(--color-heading)] uppercase leading-none font-bold">99.8% BIO-ACTIVE</span>
-            </motion.div>
+            </div>
 
-            {/* Isolated floating bottle image */}
-            <motion.img
+            {/* Isolated product bottle image */}
+            <img
               src="/images/isolated_bottle.png"
               alt="Vedah Vital Ashwagandha Bottle"
-              className="w-[65%] h-auto object-contain select-none filter drop-shadow-[0_30px_45px_rgba(10,25,47,0.22)] animate-float z-10"
+              className="w-[65%] h-auto object-contain select-none filter drop-shadow-[0_30px_45px_rgba(10,25,47,0.22)] z-10"
               draggable="false"
-              style={{ translateZ: 30 }}
             />
           </motion.div>
         );
@@ -112,48 +99,55 @@ export const Hero: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.4 }}
-            className="w-full h-full flex items-center justify-center p-4"
+            className="w-full h-full flex items-center justify-center p-3"
           >
-            <div className="w-[90%] h-[90%] bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
-              <div className="pb-2 border-b border-gray-200 text-center">
+            <div className="w-[92%] h-[92%] bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-4.5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
+              <div className="pb-1.5 border-b border-gray-200 text-center">
                 <span className="font-sans text-xs font-bold tracking-wider uppercase text-[var(--color-navy)]">Active Ingredients</span>
               </div>
 
-              <div className="flex-1 flex flex-col gap-3.5 my-3">
-                {/* Ashwagandha ingredient */}
-                <div className="flex items-center gap-3 bg-[var(--color-navy)]/5 p-2.5 rounded-2xl border border-[var(--color-navy)]/10">
-                  <img 
-                    src="/images/ashwagandha_plant_root.png" 
-                    alt="Ashwagandha Plant & Root" 
-                    className="w-14 h-14 object-cover rounded-xl border border-white shadow-sm select-none"
-                    draggable="false"
-                  />
-                  <div className="flex-1 flex flex-col text-left">
-                    <span className="font-sans text-xs font-bold text-[var(--color-heading)]">KSM-66® Ashwagandha Root</span>
-                    <span className="font-sans text-[10px] text-[var(--color-text)] font-light leading-snug mt-0.5">
-                      600mg clinical dose. Full-spectrum root extract standardized to 5% withanolides.
-                    </span>
+              {/* Side-by-side ingredient cards */}
+              <div className="flex-1 grid grid-cols-2 gap-3 my-3">
+                {/* Ashwagandha Card */}
+                <div className="flex flex-col bg-[var(--color-navy)]/5 rounded-2xl border border-[var(--color-navy)]/10 overflow-hidden shadow-sm p-2 text-left">
+                  <div className="w-full aspect-[4/3] rounded-xl overflow-hidden shadow-inner border border-white bg-white">
+                    <img 
+                      src="/images/ashwagandha_plant_root.png" 
+                      alt="Ashwagandha Plant & Root" 
+                      className="w-full h-full object-cover select-none"
+                      draggable="false"
+                    />
+                  </div>
+                  <div className="flex flex-col mt-2">
+                    <span className="font-sans text-[10px] font-bold text-[var(--color-heading)] leading-tight">KSM-66® Ashwagandha</span>
+                    <span className="font-sans text-[7px] text-[var(--color-navy)] font-bold tracking-wider uppercase mt-0.5">600mg Dose</span>
+                    <p className="font-sans text-[8px] text-[var(--color-text)] font-light leading-normal mt-1">
+                      Full-spectrum root extract standardized to 5% withanolides for potency.
+                    </p>
                   </div>
                 </div>
 
-                {/* Black Pepper ingredient */}
-                <div className="flex items-center gap-3 bg-[var(--color-navy)]/5 p-2.5 rounded-2xl border border-[var(--color-navy)]/10">
-                  <img 
-                    src="/images/black_peppercorns.png" 
-                    alt="Black Peppercorns" 
-                    className="w-14 h-14 object-cover rounded-xl border border-white shadow-sm select-none"
-                    draggable="false"
-                  />
-                  <div className="flex-1 flex flex-col text-left">
-                    <span className="font-sans text-xs font-bold text-[var(--color-heading)]">Black Pepper Extract (Piperine)</span>
-                    <span className="font-sans text-[10px] text-[var(--color-text)] font-light leading-snug mt-0.5">
-                      5mg enhancement dose. Boosts absorption of active withanolides for maximum bioavailability.
-                    </span>
+                {/* Black Pepper Card */}
+                <div className="flex flex-col bg-[var(--color-navy)]/5 rounded-2xl border border-[var(--color-navy)]/10 overflow-hidden shadow-sm p-2 text-left">
+                  <div className="w-full aspect-[4/3] rounded-xl overflow-hidden shadow-inner border border-white bg-white">
+                    <img 
+                      src="/images/black_peppercorns.png" 
+                      alt="Black Peppercorns" 
+                      className="w-full h-full object-cover select-none"
+                      draggable="false"
+                    />
+                  </div>
+                  <div className="flex flex-col mt-2">
+                    <span className="font-sans text-[10px] font-bold text-[var(--color-heading)] leading-tight">Black Pepper Extract</span>
+                    <span className="font-sans text-[7px] text-[var(--color-navy)] font-bold tracking-wider uppercase mt-0.5">5mg Dose</span>
+                    <p className="font-sans text-[8px] text-[var(--color-text)] font-light leading-normal mt-1">
+                      Pure Bio-enhancing Piperine to maximize absorption of withanolides.
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="text-center text-[9px] font-sans text-gray-500">
+              <div className="text-center text-[8px] font-sans text-gray-500">
                 100% natural, vegetarian capsules with zero synthetic fillers or binders.
               </div>
             </div>
@@ -321,32 +315,11 @@ export const Hero: React.FC = () => {
   const yBg = useTransform(scrollY, [0, 1000], [0, 150]);
   const yBottle = useTransform(scrollY, [0, 1000], [0, -70]);
 
-  // Interactive mouse tilt springs
-  const xVal = useMotionValue(0.5);
-  const yVal = useMotionValue(0.5);
-  
-  const rotateX = useSpring(useTransform(yVal, [0, 1], [8, -8]), { stiffness: 90, damping: 16 });
-  const rotateY = useSpring(useTransform(xVal, [0, 1], [-8, 8]), { stiffness: 90, damping: 16 });
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    xVal.set(x);
-    yVal.set(y);
-  };
-
-  const handleMouseLeave = () => {
-    xVal.set(0.5);
-    yVal.set(0.5);
-  };
 
   return (
     <section 
       ref={containerRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       className="relative min-h-screen flex items-center justify-center pt-28 pb-16 overflow-hidden bg-white select-none"
     >
       {/* 1. Full-Width Background Parallax Layer */}
@@ -441,16 +414,12 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* RIGHT COLUMN: Interactive Product Carousel */}
-        <div 
-          className="group order-1 lg:order-2 lg:col-span-6 flex justify-center lg:justify-end items-center relative py-8 lg:py-0 z-10"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+        <div className="group order-1 lg:order-2 lg:col-span-6 flex justify-center lg:justify-end items-center relative py-8 lg:py-0 z-10">
           <div className="relative w-[360px] md:w-[500px] aspect-square flex items-center justify-center overflow-visible">
             
-            {/* 3D Tilt Container for Slide Content */}
+            {/* Carousel Container (Static on hover, parallax on scroll) */}
             <motion.div
-              style={{ y: yBottle, rotateX, rotateY, transformStyle: "preserve-3d" }}
+              style={{ y: yBottle }}
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.9, ease: "easeOut" }}
