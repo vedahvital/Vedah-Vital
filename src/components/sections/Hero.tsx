@@ -1,7 +1,5 @@
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
-import { Play } from 'lucide-react';
 import ShieldCheck from '../ui/icons/shield-check';
 import { Button } from '../ui/Button';
 
@@ -106,7 +104,7 @@ export const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-5 w-full sm:w-auto pt-3"
+            className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto pt-3"
           >
             <a 
               href="https://www.amazon.com" 
@@ -119,45 +117,15 @@ export const Hero: React.FC = () => {
               </Button>
             </a>
 
-            {/* Video Play link */}
-            <a 
-              href="https://www.youtube.com/" 
-              target="_blank" 
-              rel="noreferrer"
-              className="flex items-center justify-center gap-3.5 group cursor-pointer focus:outline-none"
-            >
-              <div className="w-10 h-10 rounded-full border border-[var(--color-navy)] flex items-center justify-center text-[var(--color-navy)] group-hover:bg-[var(--color-navy)] group-hover:text-white transition-all duration-300">
-                <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
-              </div>
-              <span className="font-sans text-xs font-semibold tracking-wider text-[var(--color-heading)] uppercase group-hover:text-[var(--color-navy)] transition-colors">
-                Watch sourcing video
-              </span>
-            </a>
-          </motion.div>
-
-          {/* Socials & Amazon CTA Row */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.45 }}
-            className="flex items-center justify-between w-full mt-5.5 pt-4.5 border-t border-white/20"
-          >
             {/* Trust specs */}
-            <div className="flex gap-4 text-xs font-sans font-medium text-white">
-              <span className="flex items-center gap-1">
+            <div className="flex items-center gap-4 text-xs font-sans font-semibold text-[var(--color-navy)]">
+              <span className="flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 cGMP
               </span>
-              <span>•</span>
+              <span className="opacity-40">•</span>
               <span>Non-GMO</span>
             </div>
-
-            {/* Shop Collection Button */}
-            <Link to="/" className="focus:outline-none">
-              <Button variant="outline" className="py-2.5 px-6 text-[10px] uppercase tracking-wider font-semibold rounded-full border-white text-white hover:bg-white hover:text-[var(--color-navy-deep)] transition-all duration-300">
-                shop collection
-              </Button>
-            </Link>
           </motion.div>
 
         </div>
