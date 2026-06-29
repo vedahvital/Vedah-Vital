@@ -314,7 +314,6 @@ export const Hero: React.FC = () => {
 
   // Parallax scrolling layers
   const { scrollY } = useScroll();
-  const yBg = useTransform(scrollY, [0, 1000], [0, 150]);
   const yBottle = useTransform(scrollY, [0, 1000], [0, -70]);
 
 
@@ -324,11 +323,8 @@ export const Hero: React.FC = () => {
       ref={containerRef}
       className="relative min-h-[100svh] flex items-center justify-center pt-28 pb-16 overflow-clip bg-white"
     >
-      {/* 1. Full-Width Background Parallax Layer */}
-      <motion.div 
-        style={{ y: yBg }} 
-        className="absolute inset-0 w-full h-full pointer-events-none z-0"
-      >
+      {/* 1. Full-Width Background Layer */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         <img 
           src="/images/hero-bg.webp?v=4" 
           alt="Natural Stone Backdrop" 
@@ -338,7 +334,7 @@ export const Hero: React.FC = () => {
 
         {/* Soft bottom blend to white background - restricted to bottom 25% to keep image crisp */}
         <div className="absolute bottom-0 left-0 w-full h-[25%] bg-gradient-to-t from-white to-transparent z-0" />
-      </motion.div>
+      </div>
 
             
       {/* Main Grid Content */}
