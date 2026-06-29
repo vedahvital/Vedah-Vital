@@ -321,7 +321,7 @@ export const Hero: React.FC = () => {
   return (
     <section 
       ref={containerRef}
-      className="relative min-h-[100svh] flex items-center justify-center pt-28 pb-16 overflow-clip bg-white"
+      className="relative min-h-[100svh] md:min-h-[800px] lg:min-h-[850px] flex items-center justify-center pt-28 pb-16 overflow-clip bg-white"
     >
       {/* 1. Full-Width Background Layer */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
