@@ -4,6 +4,18 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script>
+      (function() {
+        var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        var isSpoofedDesktop = /Macintosh|Windows|X11|Linux/.test(navigator.userAgent) && !/Mobi|Android|iPhone|iPad/.test(navigator.userAgent);
+        if (isTouch && isSpoofedDesktop) {
+          var meta = document.querySelector('meta[name="viewport"]');
+          if (meta) {
+            meta.setAttribute('content', 'width=1280');
+          }
+        }
+      })();
+    </script>
     <title>Vedah Vital</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
