@@ -417,16 +417,15 @@ export const IngredientInfographic: React.FC = () => {
           <span className="text-[9px] font-sans font-bold tracking-[0.18em] text-[#FFE296] uppercase">2. THE STRENGTH</span>
           
           <div className="w-full h-32 flex items-center justify-center relative">
-            <defs>
-              <linearGradient id="dialGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#8FB3FF" />
-                <stop offset="50%" stopColor="#FFE296" />
-                <stop offset="100%" stopColor="#F5B041" />
-              </linearGradient>
-            </defs>
-
             {/* Larger Standardized Strength Progress Ring */}
             <svg className="w-28 h-28 transform -rotate-90">
+              <defs>
+                <linearGradient id="dialGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#8FB3FF" />
+                  <stop offset="50%" stopColor="#FFE296" />
+                  <stop offset="100%" stopColor="#F5B041" />
+                </linearGradient>
+              </defs>
               <circle
                 cx="56"
                 cy="56"

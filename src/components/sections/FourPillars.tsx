@@ -366,7 +366,7 @@ export const FourPillars: React.FC = () => {
         </AnimatedSection>
 
         {/* Pillars Circle Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 justify-items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 lg:gap-8 justify-items-center">
           {pillars.map((pillar, index) => {
             const InfographicComponent = pillar.infographic;
             return (

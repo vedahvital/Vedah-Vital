@@ -262,7 +262,7 @@ export const Verify: React.FC = () => {
                   </div>
 
                   {/* Batch Info Grid */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10 border-b border-[rgba(10, 25, 47,0.15)] pb-8">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-10 border-b border-[rgba(10, 25, 47,0.15)] pb-8">
                     {[
                       { k: 'MFG Date', v: report.mfgDate },
                       { k: 'Exp Date', v: report.expDate },

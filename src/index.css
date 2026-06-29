@@ -2,6 +2,8 @@
 
 @theme {
   --breakpoint-lg: 960px;
+  --font-sans: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
 }
 
 @layer base {

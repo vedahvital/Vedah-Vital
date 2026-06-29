@@ -5,6 +5,7 @@ import { Hero } from '../components/sections/Hero';
 import { TrustBar } from '../components/sections/TrustBar';
 import { FourPillars } from '../components/sections/FourPillars';
 import { IngredientScience } from '../components/sections/IngredientScience';
+import { Comparison } from '../components/sections/Comparison';
 import { PurityStandards } from '../components/sections/PurityStandards';
 import { HowItWorks } from '../components/sections/HowItWorks';
 import { PillJourney } from '../components/sections/PillJourney';
@@ -36,6 +37,7 @@ export const Home: React.FC = () => {
         <TrustBar />
         <FourPillars />
         <IngredientScience />
+        <Comparison />
         <PurityStandards />
         <HowItWorks />
         <div className="optimize-render"><PillJourney /></div>

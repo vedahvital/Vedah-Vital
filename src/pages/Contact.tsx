@@ -82,7 +82,7 @@ export const Contact: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 max-w-5xl mx-auto items-stretch glass-card-navy border border-white/40 shadow-md overflow-hidden rounded-3xl">
 
               {/* Left Column: Contact Details */}
-              <AnimatedSection className="lg:col-span-5 p-8 md:p-10 border-r border-b lg:border-b-0 border-[rgba(10, 25, 47,0.15)] bg-[var(--color-navy-light)]/40 flex flex-col justify-between gap-8">
+              <AnimatedSection className="lg:col-span-5 p-8 md:p-10 border-b lg:border-b-0 lg:border-r border-[rgba(10, 25, 47,0.15)] bg-[var(--color-navy-light)]/40 flex flex-col justify-between gap-8">
                 <div>
                   <h3 className="font-sans text-sm font-semibold uppercase tracking-wider text-[var(--color-heading)] mb-8">
                     Information & Support

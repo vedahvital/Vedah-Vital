@@ -63,7 +63,7 @@ export const FinalCTA: React.FC = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative w-[300px] md:w-[380px] aspect-square rounded-full border border-[rgba(10, 25, 47,0.25)] bg-white flex items-center justify-center overflow-visible shadow-md"
+              className="relative w-[280px] min-[340px]:w-[300px] md:w-[380px] aspect-square rounded-full border border-[rgba(10, 25, 47,0.25)] bg-white flex items-center justify-center overflow-visible shadow-md"
             >
               {/* Soft inner plate backdrop */}
               <div className="absolute inset-4 rounded-full bg-[var(--color-navy-light)] border border-dashed border-[rgba(10, 25, 47,0.15)] overflow-hidden flex items-center justify-center">

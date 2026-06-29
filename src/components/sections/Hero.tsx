@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ShieldCheck from '../ui/icons/shield-check';
 import { Button } from '../ui/Button';
 
@@ -175,60 +175,50 @@ export const Hero: React.FC = () => {
             transition={{ duration: 0.4 }}
             className="w-full h-full flex items-center justify-center p-2 sm:p-4"
           >
-            <div className="w-full sm:w-[90%] h-[96%] sm:h-[90%] bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-3.5 sm:p-5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
-              <div className="pb-1.5 sm:pb-2 border-b border-gray-200 text-center">
-                <span className="font-sans text-[12.5px] sm:text-sm md:text-base font-bold tracking-wider uppercase text-[var(--color-navy)]">Why KSM-66® Ashwagandha?</span>
+            <div className="w-full sm:w-[90%] h-[96%] sm:h-[90%] bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-3 sm:p-4 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
+              
+              {/* Botanical Visual Image Banner */}
+              <div className="h-[35%] w-full rounded-2xl overflow-hidden relative border border-gray-200 shrink-0">
+                <img 
+                  src="/images/hero_comparison.webp" 
+                  alt="Root vs Leaf comparison" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-x-3 bottom-1.5 flex justify-between items-center text-white font-sans font-bold text-[7px] sm:text-[9px] tracking-wider uppercase">
+                  <span>KSM-66® (Root Only)</span>
+                  <span>Standard (Leaf Filler)</span>
+                </div>
               </div>
 
-              <div className="flex-1 flex flex-col justify-center gap-1.5 sm:gap-2.5 my-2 sm:my-3.5 text-left">
-                <div className="grid grid-cols-12 gap-1 text-[11.5px] sm:text-[12.5px] md:text-sm font-sans font-bold border-b border-gray-100 pb-1 text-gray-400">
+              {/* Simplified Comparison Table */}
+              <div className="flex-1 flex flex-col justify-center gap-1.5 my-2 text-left">
+                <div className="grid grid-cols-12 gap-1 text-[9px] sm:text-[10px] md:text-xs font-sans font-bold border-b border-gray-100 pb-1 text-gray-400">
                   <div className="col-span-5">Feature</div>
                   <div className="col-span-4 text-[var(--color-navy)]">KSM-66®</div>
                   <div className="col-span-3">Standard</div>
                 </div>
 
-                <div className="grid grid-cols-12 gap-1 text-[11.5px] sm:text-[12.5px] md:text-sm font-sans border-b border-gray-50 py-1.5 sm:py-2 items-center">
-                  <div className="col-span-5 font-medium text-gray-600">Source</div>
-                  <div className="col-span-4 font-bold text-emerald-600 flex items-center gap-1">
-                    <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[3]" /> Roots Only
-                  </div>
-                  <div className="col-span-3 text-red-500 flex items-center gap-1">
-                    <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Leaf Waste
-                  </div>
+                <div className="grid grid-cols-12 gap-1 text-[9px] sm:text-[10px] md:text-xs font-sans border-b border-gray-50 py-1 items-center">
+                  <div className="col-span-5 font-medium text-gray-600">Cytotoxicity</div>
+                  <div className="col-span-4 font-bold text-emerald-600">Safe (≤0.1% WaA)</div>
+                  <div className="col-span-3 text-red-500 font-bold">Risk (2.5% WaA)</div>
                 </div>
 
-                <div className="grid grid-cols-12 gap-1 text-[11.5px] sm:text-[12.5px] md:text-sm font-sans border-b border-gray-50 py-1.5 sm:py-2 items-center">
-                  <div className="col-span-5 font-medium text-gray-600">Standardization</div>
-                  <div className="col-span-4 font-bold text-emerald-600 flex items-center gap-1">
-                    <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[3]" /> 5% Active
-                  </div>
-                  <div className="col-span-3 text-red-500 flex items-center gap-1">
-                    <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Unspecified
-                  </div>
+                <div className="grid grid-cols-12 gap-1 text-[9px] sm:text-[10px] md:text-xs font-sans border-b border-gray-50 py-1 items-center">
+                  <div className="col-span-5 font-medium text-gray-600">Withanolides</div>
+                  <div className="col-span-4 font-bold text-emerald-600">5% Standardized</div>
+                  <div className="col-span-3 text-red-500">Unspecified</div>
                 </div>
 
-                <div className="grid grid-cols-12 gap-1 text-[11.5px] sm:text-[12.5px] md:text-sm font-sans border-b border-gray-50 py-1.5 sm:py-2 items-center">
-                  <div className="col-span-5 font-medium text-gray-600">Extraction</div>
-                  <div className="col-span-4 font-bold text-emerald-600 flex items-center gap-1">
-                    <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[3]" /> Green (Water)
-                  </div>
-                  <div className="col-span-3 text-red-500 flex items-center gap-1">
-                    <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Solvents
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-1 text-[11.5px] sm:text-[12.5px] md:text-sm font-sans border-b border-gray-50 py-1.5 sm:py-2 items-center">
+                <div className="grid grid-cols-12 gap-1 text-[9px] sm:text-[10px] md:text-xs font-sans py-1 items-center">
                   <div className="col-span-5 font-medium text-gray-600">Clinical Proof</div>
-                  <div className="col-span-4 font-bold text-emerald-600 flex items-center gap-1">
-                    <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[3]" /> 24+ Trials
-                  </div>
-                  <div className="col-span-3 text-red-500 flex items-center gap-1">
-                    <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> None
-                  </div>
+                  <div className="col-span-4 font-bold text-emerald-600">20+ Trials</div>
+                  <div className="col-span-3 text-red-500">None</div>
                 </div>
               </div>
 
-              <div className="text-center text-[10.5px] sm:text-xs md:text-sm font-sans text-gray-500">
+              <div className="text-center text-[8.5px] sm:text-[10px] font-sans text-gray-400 border-t border-gray-100 pt-1.5 shrink-0">
                 KSM-66® is the highest concentration, most bioavailable root extract.
               </div>
             </div>

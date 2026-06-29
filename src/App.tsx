@@ -34,12 +34,6 @@ function App() {
       <Helmet>
         <title>Vedah Vital — Premium Organic Wellness</title>
         <meta name="description" content="Vedah Vital — authentic Ayurvedic wellness backed by transparency and lab-science." />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
       </Helmet>
 
       <Suspense fallback={<LoadingFallback />}>
