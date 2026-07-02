@@ -6,69 +6,6 @@ import { PurityIllustration } from '../ui/PurityIllustration';
 export const PurityStandards: React.FC = () => {
   const guarantees = [
     {
-      title: "USDA Organic",
-      description: "100% certified organic cultivation. Grown without toxic chemical pesticides, synthetic weed-killers, or artificial growth regulators. Standardized to preserve maximum botanical purity.",
-      illustration: () => (
-        <svg viewBox="0 0 100 100" className="w-20 h-20 text-[var(--color-navy)]" fill="none">
-          <defs>
-            <linearGradient id="sunGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#FFE296" />
-              <stop offset="100%" stopColor="#F5B041" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="organicLeaf" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#8FB3FF" />
-              <stop offset="100%" stopColor="#1B365D" />
-            </linearGradient>
-          </defs>
-          
-          {/* Sun Rays Background */}
-          <circle cx="50" cy="40" r="25" fill="url(#sunGrad)" opacity="0.3" />
-          
-          {/* Soil base */}
-          <path d="M25,75 C35,72 65,72 75,75 L75,80 C65,80 35,80 25,80 Z" fill="currentColor" opacity="0.15" />
-          
-          {/* Double concentric borders with dots */}
-          <circle cx="50" cy="50" r="44" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.4" />
-          <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-          
-          {/* Growing sprout shoot */}
-          <motion.path
-            d="M50,75 L50,45"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          />
-          
-          {/* Left leaf */}
-          <motion.path
-            d="M50,58 C38,55 32,44 34,44 C34,44 42,42 50,52"
-            fill="url(#organicLeaf)"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            animate={{ rotate: [-2, 2, -2] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="origin-[50px_58px]"
-          />
-          
-          {/* Right leaf */}
-          <motion.path
-            d="M50,50 C62,47 68,36 66,36 C66,36 58,34 50,44"
-            fill="url(#organicLeaf)"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            animate={{ rotate: [2, -2, 2] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            className="origin-[50px_50px]"
-          />
-
-          {/* Golden floating pollen - paused when out of view */}
-          <motion.circle cx="34" cy="38" r="1.5" fill="#FFE296" animate={{ y: [0, -8], opacity: [0, 1, 0] }} transition={{ duration: 2, repeat: Infinity }} />
-          <motion.circle cx="66" cy="30" r="1.5" fill="#FFE296" animate={{ y: [0, -6], opacity: [0, 1, 0] }} transition={{ duration: 1.8, repeat: Infinity, delay: 0.5 }} />
-          <motion.circle cx="50" cy="28" r="2" fill="#FFF" animate={{ y: [0, -10], opacity: [0, 1, 0] }} transition={{ duration: 2.2, repeat: Infinity, delay: 0.9 }} />
-        </svg>
-      )
-    },
-    {
       title: "cGMP Facility",
       description: "Manufactured in a certified cGMP (current Good Manufacturing Practices) facility. Rigorous production control ensures every stage of batching meets FDA sanitation and quality benchmarks.",
       illustration: () => (
@@ -251,7 +188,7 @@ export const PurityStandards: React.FC = () => {
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {guarantees.map((g, idx) => {
               const Illustration = g.illustration;
               return (

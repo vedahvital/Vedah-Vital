@@ -47,16 +47,34 @@ export const Hero: React.FC = () => {
             {/* Circular soft halo glow */}
             <div className="absolute w-[80%] h-[80%] rounded-full bg-gradient-to-tr from-[var(--color-navy)]/25 to-white/30 filter blur-2xl opacity-80 z-0" />
 
-            {/* Info badge 1 (Claymorphic) */}
+            {/* Info badge 1 (Claymorphic) - Top Left */}
             <div className="absolute top-[12%] left-2 sm:left-[-4%] md:left-[-8%] z-20 clay-card-navy py-2 px-3 sm:py-3 sm:px-4.5 flex flex-col items-start gap-0.5 pointer-events-none select-none">
               <span className="text-[7px] sm:text-[8px] font-sans font-bold tracking-[0.15em] text-[var(--color-navy)] uppercase leading-none">FORMULA TYPE</span>
               <span className="text-[10px] sm:text-[11px] font-sans font-bold text-[var(--color-heading)] uppercase leading-none">5% WITHANOLIDES</span>
             </div>
 
-            {/* Info badge 2 (Glassmorphic) */}
+            {/* Info badge 2 (Glassmorphic) - Bottom Right */}
             <div className="absolute bottom-[18%] right-2 sm:right-[-4%] md:right-[-8%] z-20 glass-card-navy py-2 px-3 sm:py-3 sm:px-4.5 flex flex-col items-start gap-0.5 pointer-events-none select-none">
               <span className="text-[7px] sm:text-[8px] font-sans font-bold tracking-[0.15em] text-[var(--color-navy)] uppercase leading-none font-semibold">PURITY GUARANTEE</span>
               <span className="text-[10px] sm:text-[11px] font-sans font-bold text-[var(--color-heading)] uppercase leading-none font-bold">99.8% BIO-ACTIVE</span>
+            </div>
+
+            {/* Info badge 3 (Claymorphic) - Top Right: KSM-66 Licensed */}
+            <div className="absolute top-[12%] right-2 sm:right-[-4%] md:right-[-8%] z-20 clay-card-navy py-2 px-3 sm:py-3 sm:px-4.5 flex flex-col items-end gap-0.5 pointer-events-none select-none">
+              <span className="text-[7px] sm:text-[8px] font-sans font-bold tracking-[0.15em] text-[var(--color-navy)] uppercase leading-none">EXTRACT GRADE</span>
+              <span className="text-[10px] sm:text-[11px] font-sans font-bold text-[var(--color-heading)] uppercase leading-none">KSM-66® LICENSED</span>
+            </div>
+
+            {/* Info badge 4 (Glassmorphic) - Bottom Left: Clinically Studied */}
+            <div className="absolute bottom-[18%] left-2 sm:left-[-4%] md:left-[-8%] z-20 glass-card-navy py-2 px-3 sm:py-3 sm:px-4.5 flex flex-col items-start gap-0.5 pointer-events-none select-none">
+              <span className="text-[7px] sm:text-[8px] font-sans font-bold tracking-[0.15em] text-[var(--color-navy)] uppercase leading-none font-semibold">EVIDENCE BASED</span>
+              <span className="text-[10px] sm:text-[11px] font-sans font-bold text-[var(--color-heading)] uppercase leading-none font-bold">CLINICALLY STUDIED</span>
+            </div>
+
+            {/* Info badge 5 (Claymorphic) - Middle Left: Root Only Extract */}
+            <div className="absolute left-2 sm:left-[-4%] md:left-[-8%] top-1/2 -translate-y-1/2 -mt-10 z-20 clay-card-navy py-2 px-3 sm:py-3 sm:px-4.5 flex flex-col items-start gap-0.5 pointer-events-none select-none">
+              <span className="text-[7px] sm:text-[8px] font-sans font-bold tracking-[0.15em] text-[var(--color-navy)] uppercase leading-none">SOURCE</span>
+              <span className="text-[10px] sm:text-[11px] font-sans font-bold text-[var(--color-heading)] uppercase leading-none">ROOT ONLY EXTRACT</span>
             </div>
 
             {/* Isolated product bottle image */}

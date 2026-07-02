@@ -376,7 +376,7 @@ export const FourPillars: React.FC = () => {
                 className="flex flex-col items-center text-center gap-4 group w-full max-w-[240px]"
               >
                 {/* Circular claymorphic frame - reversed: navy background, white content */}
-                <div className="w-36 h-36 md:w-40 md:h-40 rounded-full flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:scale-105 relative clay-circle-navy-blue">
+                <div className="w-40 h-40 md:w-48 md:h-48 rounded-full flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:scale-105 relative clay-circle-navy-blue">
                   
                   {/* Subtle ring path decoration inside circle */}
                   <svg className="absolute inset-2 text-white/10 animate-spin-slow pointer-events-none" viewBox="0 0 100 100" fill="currentColor">
@@ -384,7 +384,7 @@ export const FourPillars: React.FC = () => {
                   </svg>
 
                   {/* Animated Infographic inside circle */}
-                  <div className="w-24 h-24 md:w-28 md:h-28 z-10 flex items-center justify-center">
+                  <div className="w-28 h-28 md:w-32 md:h-32 z-10 flex items-center justify-center">
                     <InfographicComponent />
                   </div>
 
@@ -393,14 +393,14 @@ export const FourPillars: React.FC = () => {
                 </div>
 
                 {/* Info Text */}
-                <div className="flex flex-col items-center gap-1.5 mt-2">
+                <div className="flex flex-col items-center gap-1.5 mt-3">
                   <h3 className="heading-condensed text-xl text-[var(--color-heading)] tracking-wider">
                     {pillar.title}
                   </h3>
                   <span className="text-[9px] font-sans font-bold text-[var(--color-navy)] uppercase tracking-widest leading-none block">
                     {pillar.detail}
                   </span>
-                  <p className="font-sans text-[0.8rem] text-[var(--color-text)] font-light leading-relaxed max-w-[190px] mt-1 h-14 overflow-hidden">
+                  <p className="font-sans text-[0.8rem] text-[var(--color-text)] font-light leading-relaxed max-w-[190px] mt-1 h-16 overflow-hidden">
                     {pillar.description}
                   </p>
                 </div>

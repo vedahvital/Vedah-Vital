@@ -11,7 +11,7 @@ export const PurityIllustration: React.FC = () => {
       className="w-full max-w-[400px] aspect-[4/4.5] rounded-3xl bg-white/40 border border-[rgba(10, 25, 47, 0.16)] backdrop-blur-md shadow-xl p-6 flex flex-col justify-between items-center relative overflow-hidden text-[var(--color-navy)]"
     >
       {/* ISO Certified Badge */}
-      <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-white/90 border border-[rgba(255, 226, 150, 0.8)] rounded-full px-3 py-1 shadow-sm z-20">
+      <div className="absolute top-2 right-4 flex items-center gap-1.5 bg-white/90 border border-[rgba(255, 226, 150, 0.8)] rounded-full px-3 py-1 shadow-sm z-20">
         <motion.span
           animate={{ rotate: 360 }}
           transition={{ duration: 12, repeat: Infinity, ease: "linear" }}

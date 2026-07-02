@@ -7,7 +7,7 @@ import { AnimatedSection } from '../ui/AnimatedSection';
 const PureRootImage = () => (
   <div className="h-24 sm:h-36 md:h-40 lg:h-48 w-full rounded-xl sm:rounded-2xl overflow-hidden mb-4 relative border border-white/10 group-hover:scale-[1.01] transition-transform duration-500 shadow-sm">
     <img 
-      src="/images/ashwagandha_plant_root.webp" 
+      src="/images/ashwagandha_root.png" 
       alt="Organic Ashwagandha Tuberous Root" 
       className="w-full h-full object-cover"
       loading="lazy"
@@ -22,7 +22,7 @@ const PureRootImage = () => (
 const WholeBodyImage = () => (
   <div className="h-24 sm:h-36 md:h-40 lg:h-48 w-full rounded-xl sm:rounded-2xl overflow-hidden mb-4 relative border border-gray-200/50 group-hover:scale-[1.01] transition-transform duration-500 shadow-sm">
     <img 
-      src="/images/ashwagandha_leaves.webp" 
+      src="/images/ashwagandha_plant.png" 
       alt="Ashwagandha Leaves and Berries" 
       className="w-full h-full object-cover"
       loading="lazy"
@@ -212,7 +212,7 @@ export const Comparison: React.FC = () => {
             
             {/* Chart Area (Left side on md+) */}
             <div className="md:col-span-7 flex flex-col gap-4">
-              <span className="font-sans text-[9px] font-bold text-[var(--color-navy)] tracking-[0.25em] uppercase opacity-75">
+              <span className="font-sans text-[10px] sm:text-[11px] md:text-[12px] font-bold text-[var(--color-navy)] tracking-[0.25em] uppercase opacity-75">
                 The Withaferin A Difference
               </span>
               
@@ -225,7 +225,7 @@ export const Comparison: React.FC = () => {
                 <div className="absolute inset-x-5 top-[126px] border-t border-dashed border-gray-100" />
 
                 {/* Chart Title / Y-Axis Label */}
-                <div className="text-[8px] font-sans font-bold tracking-widest text-gray-400 uppercase text-left">
+                <div className="text-[9px] sm:text-[10px] md:text-[11px] font-sans font-bold tracking-widest text-gray-400 uppercase text-left">
                   Withaferin A Concentration (%)
                 </div>
                 
@@ -233,7 +233,7 @@ export const Comparison: React.FC = () => {
                 <div className="h-36 flex items-end justify-around gap-2 pt-2 border-b border-gray-200 relative">
                   
                   {/* Grid Y-Axis Markers */}
-                  <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-[8px] font-sans text-gray-400 select-none">
+                  <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-[9px] sm:text-[10px] md:text-[11px] font-sans text-gray-400 select-none">
                     <span>3.0%</span>
                     <span>2.0%</span>
                     <span>1.0%</span>
@@ -242,7 +242,7 @@ export const Comparison: React.FC = () => {
 
                   {/* Bar 1: KSM-66 (<= 0.1%) */}
                   <div className="flex flex-col items-center gap-1.5 z-10 w-[35%]">
-                    <span className="text-[9px] font-sans font-bold text-emerald-600">≤ 0.1%</span>
+                    <span className="text-[10px] sm:text-[11px] md:text-[12px] font-sans font-bold text-emerald-600">≤ 0.1%</span>
                     <div className="w-full h-28 flex items-end justify-center">
                       <motion.div 
                         initial={{ height: 0 }}
@@ -252,28 +252,28 @@ export const Comparison: React.FC = () => {
                         className="w-full bg-gradient-to-t from-emerald-600 to-emerald-400 rounded-t-md shadow-[0_2px_8px_rgba(16,185,129,0.3)]"
                       />
                     </div>
-                    <span className="text-[9px] font-sans font-bold text-[var(--color-heading)] tracking-wide uppercase mt-1">KSM-66</span>
+                    <span className="text-[10px] sm:text-[11px] md:text-[12px] font-sans font-bold text-[var(--color-heading)] tracking-wide uppercase mt-1">KSM-66</span>
                   </div>
 
                   {/* Bar 2: Whole Body Powder (2.5%) */}
                   <div className="flex flex-col items-center gap-1.5 z-10 w-[35%]">
-                    <span className="text-[9px] font-sans font-bold text-gray-500">2.5%</span>
+                    <span className="text-[10px] sm:text-[11px] md:text-[12px] font-sans font-bold text-red-600">2.5%</span>
                     <div className="w-full h-28 flex items-end justify-center">
                       <motion.div 
                         initial={{ height: 0 }}
                         whileInView={{ height: '83.3%' }} // 2.5% out of 3% max
                         viewport={{ once: true }}
                         transition={{ duration: 1.2, ease: "easeOut" }}
-                        className="w-full bg-gradient-to-t from-gray-500 to-gray-300 rounded-t-md shadow-sm"
+                        className="w-full bg-gradient-to-t from-red-600 to-red-400 rounded-t-md shadow-[0_2px_8px_rgba(239,68,68,0.3)]"
                       />
                     </div>
-                    <span className="text-[9px] font-sans font-bold text-gray-400 tracking-wide uppercase mt-1">Whole Body</span>
+                    <span className="text-[10px] sm:text-[11px] md:text-[12px] font-sans font-bold text-red-500 tracking-wide uppercase mt-1">Whole Body</span>
                   </div>
 
                 </div>
 
                 {/* Footnote */}
-                <p className="text-[8.5px] font-sans text-gray-400 text-left leading-normal italic">
+                <p className="text-[11px] sm:text-[12px] md:text-[13px] font-sans text-gray-400 text-left leading-normal italic">
                   *Note: Whole body powder is often high in toxic Withaferin A due to leaf/stem content; KSM-66 is root-only and controlled.
                 </p>
               </div>

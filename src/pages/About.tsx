@@ -1,27 +1,9 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Shield, Sparkles, Heart, Compass } from 'lucide-react';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
-
-const philoPillars = [
-  {
-    icon: Sparkles,
-    label: 'Clean-Label Integrity',
-    desc: 'Zero synthetic binders, zero coloring agents, zero leaf waste. Only organic root extracts, Piperine, and vegetable cellulose.',
-  },
-  {
-    icon: Shield,
-    label: 'Clinical Standards',
-    desc: 'Standardized to 5% Withanolides via HPLC to guarantee active strength in every single capsule.',
-  },
-  {
-    icon: Heart,
-    label: 'Radical Transparency',
-    desc: 'Batch-level lab reports for every bottle. Input your batch code to view full heavy metal and purity audits.',
-  },
-];
+import { CorePhilosophySection } from '../components/sections/CorePhilosophySection';
 
 export const About: React.FC = () => {
   return (
@@ -75,38 +57,11 @@ export const About: React.FC = () => {
               </p>
             </AnimatedSection>
 
-            {/* Core Philosophy Card with Glassmorphism - Standardized */}
-            <AnimatedSection className="p-8 md:p-10 relative flex flex-col gap-6 glass-card-navy border border-white/40 shadow-sm">
-
-              <div className="absolute right-6 top-6 opacity-10 pointer-events-none select-none text-[var(--color-navy)]">
-                <Compass className="w-14 h-14 stroke-[1]" />
-              </div>
-
-              <h3 className="font-sans text-base font-semibold uppercase tracking-wider text-[var(--color-heading)]">
-                Our Core Philosophy
-              </h3>
-
-              <div className="flex flex-col gap-6">
-                {philoPillars.map(({ icon: Icon, label, desc }) => (
-                  <div key={label} className="flex gap-4 items-start">
-                    <span className="w-8 h-8 rounded-none border border-[rgba(10, 25, 47,0.25)] flex items-center justify-center shrink-0 mt-0.5 text-[var(--color-navy)] bg-white">
-                      <Icon className="w-4 h-4" />
-                    </span>
-                    <div>
-                      <h4 className="font-sans text-xs font-semibold uppercase tracking-wide text-[var(--color-heading)] mb-1">
-                        {label}
-                      </h4>
-                      <p className="font-sans text-xs text-[var(--color-text)] opacity-85 font-light leading-relaxed">
-                        {desc}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </AnimatedSection>
-
           </div>
         </section>
+
+        {/* ── Core Philosophy Section ── */}
+        <CorePhilosophySection />
 
         {/* ── Extraction Mastery ── */}
         <section className="py-20 md:py-28 bg-[var(--color-navy-light)] relative overflow-clip border-b border-[rgba(10, 25, 47,0.15)]">
