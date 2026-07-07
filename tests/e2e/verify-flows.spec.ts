@@ -11,14 +11,14 @@ test.describe('Verify page flows', () => {
   test('shows error for unknown code', async ({ page }) => {
     await page.goto('/verify');
     await page.fill('#batch-code-input', 'VV-FAKE-9999-999');
-    await page.click('button:has-text("Verify")');
+    await page.press('#batch-code-input', 'Enter');
     await expect(page.getByText(/batch code not found/i)).toBeVisible({ timeout: 5000 });
   });
 
   test('shows report for known code VV-ASH-2026-001', async ({ page }) => {
     await page.goto('/verify');
     await page.fill('#batch-code-input', 'VV-ASH-2026-001');
-    await page.click('button:has-text("Verify")');
+    await page.press('#batch-code-input', 'Enter');
     await expect(page.getByText(/certificate of analysis/i)).toBeVisible({ timeout: 5000 });
   });
 });
