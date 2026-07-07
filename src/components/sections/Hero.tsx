@@ -193,21 +193,21 @@ export const Hero: React.FC = () => {
             transition={{ duration: 0.4 }}
             className="w-full h-full flex items-center justify-center p-1 sm:p-2.5"
           >
-            <div className="w-full h-full bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-3 sm:p-4 md:p-5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
+            <div className="w-full h-full bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-2.5 sm:p-4 md:p-5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
               
               {/* Header Title */}
-              <div className="w-full text-center pb-1.5 border-b border-gray-100 shrink-0">
-                <h3 className="font-sans text-[11px] sm:text-xs md:text-sm font-extrabold tracking-wide uppercase text-gray-900">
+              <div className="w-full text-center pb-1 border-b border-gray-100 shrink-0">
+                <h3 className="font-sans text-[10px] sm:text-xs md:text-sm font-extrabold tracking-wide uppercase text-gray-900">
                   KSM-66 ASHWAGANDHA: Root vs. Whole Plant
                 </h3>
               </div>
 
               {/* Grid content */}
-              <div className="flex-1 grid grid-cols-2 gap-2.5 sm:gap-4 my-2 overflow-hidden items-stretch">
+              <div className="flex-1 grid grid-cols-2 gap-2 sm:gap-4 my-1.5 items-stretch">
                 
                 {/* LEFT COLUMN: Vedah Vital (KSM-66) - Rich Navy/Gold Spotlight Card */}
                 <div 
-                  className="rounded-2xl p-3 sm:p-4.5 flex flex-col justify-between border relative overflow-hidden text-left"
+                  className="rounded-2xl p-2 sm:p-4.5 flex flex-col justify-between border relative overflow-hidden text-left"
                   style={{
                     background: 'linear-gradient(145deg, #1B365D 0%, #0A192F 100%)',
                     borderColor: 'rgba(255, 226, 150, 0.25)',
@@ -217,21 +217,21 @@ export const Hero: React.FC = () => {
                   {/* Golden foil top edge line */}
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#D9A05B] via-[#FFE296] to-[#D9A05B]" />
 
-                  <div className="flex flex-col gap-2.5 sm:gap-3 flex-1 justify-between">
+                  <div className="flex flex-col gap-2 sm:gap-3 flex-1 justify-between">
                     
                     {/* Header Badge */}
-                    <div className="flex items-center gap-2 border-b border-white/10 pb-2 sm:pb-3">
-                      <div className="w-6.5 h-6.5 sm:w-8.5 sm:h-8.5 rounded-lg bg-white/10 text-[#FFE296] flex items-center justify-center shadow-md shrink-0">
+                    <div className="flex items-center gap-1.5 border-b border-white/10 pb-1.5 sm:pb-3">
+                      <div className="w-5.5 h-5.5 sm:w-8.5 sm:h-8.5 rounded bg-white/10 text-[#FFE296] flex items-center justify-center shadow-md shrink-0">
                         <Award className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 stroke-[1.5]" />
                       </div>
                       <div className="min-w-0">
-                        <span className="font-sans text-[6.5px] sm:text-[8px] font-bold text-[#FFE296] tracking-[0.1em] block uppercase truncate">Standardized Root</span>
-                        <h3 className="heading-condensed text-[10px] min-[380px]:text-[12px] sm:text-base text-white leading-none mt-0.5 truncate">Vedah Vital KSM-66</h3>
+                        <span className="font-sans text-[6px] min-[380px]:text-[7px] sm:text-[8px] font-bold text-[#FFE296] tracking-[0.1em] block uppercase truncate">Standardized Root</span>
+                        <h3 className="heading-condensed text-[9px] min-[380px]:text-[11px] sm:text-base text-white leading-none mt-0.5 truncate">Vedah Vital KSM-66</h3>
                       </div>
                     </div>
 
-                    {/* Botanical Image - bigger! */}
-                    <div className="h-28 min-[380px]:h-36 sm:h-38 md:h-44 lg:h-48 w-full rounded-xl overflow-hidden relative border border-white/10 shadow-sm shrink-0">
+                    {/* Botanical Image */}
+                    <div className="h-16 min-[380px]:h-22 sm:h-38 md:h-44 lg:h-48 w-full rounded-xl overflow-hidden relative border border-white/10 shadow-sm shrink-0">
                       <img 
                         src="/images/ashwagandha_root.png" 
                         alt="Organic Ashwagandha Tuberous Root" 
@@ -239,24 +239,24 @@ export const Hero: React.FC = () => {
                         draggable="false"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/80 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute bottom-1.5 left-1.5 bg-[#FFE296] text-[var(--color-navy-deep)] font-sans font-bold text-[7px] sm:text-[9px] tracking-[0.1em] uppercase px-2 py-0.5 rounded shadow-sm">
+                      <div className="absolute bottom-1 left-1 bg-[#FFE296] text-[var(--color-navy-deep)] font-sans font-bold text-[6px] min-[380px]:text-[7.5px] sm:text-[9px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded shadow-sm">
                         100% Root Only
                       </div>
                     </div>
 
                     {/* Features List */}
-                    <div className="flex-1 flex flex-col justify-around py-2 sm:py-3.5">
+                    <div className="flex-1 flex flex-col justify-around py-1.5 sm:py-3.5">
                       {[
                         "Lowest Cytotoxicity (Safe)",
                         "Standardized & Bioactive",
                         "GRAS Affirmed & Certified",
                         "Traditional Wisdom"
                       ].map((title, idx) => (
-                        <div key={idx} className="flex gap-2 sm:gap-2.5 items-center">
-                          <div className="w-4 h-4 sm:w-5.5 sm:h-5.5 rounded-full bg-[#FFE296]/15 text-[#FFE296] flex items-center justify-center shrink-0">
-                            <Check className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 stroke-[3]" />
+                        <div key={idx} className="flex gap-1.5 sm:gap-2.5 items-center">
+                          <div className="w-3.5 h-3.5 sm:w-5.5 sm:h-5.5 rounded-full bg-[#FFE296]/15 text-[#FFE296] flex items-center justify-center shrink-0">
+                            <Check className="w-2 h-2 sm:w-3 sm:h-3 stroke-[3]" />
                           </div>
-                          <span className="font-sans text-[9px] min-[380px]:text-[10px] sm:text-xs md:text-sm font-bold text-white leading-tight">{title}</span>
+                          <span className="font-sans text-[8px] min-[380px]:text-[9px] sm:text-xs md:text-sm font-bold text-white leading-tight">{title}</span>
                         </div>
                       ))}
                     </div>
@@ -266,7 +266,7 @@ export const Hero: React.FC = () => {
 
                 {/* RIGHT COLUMN: Alternative (Whole Body) - Muted Grey Card */}
                 <div 
-                  className="rounded-2xl p-3 sm:p-4.5 flex flex-col justify-between border relative text-left"
+                  className="rounded-2xl p-2 sm:p-4.5 flex flex-col justify-between border relative text-left"
                   style={{
                     background: 'linear-gradient(135deg, rgba(10, 25, 47, 0.01) 0%, rgba(10, 25, 47, 0.03) 100%)',
                     borderColor: 'rgba(10, 25, 47, 0.08)',
@@ -276,18 +276,18 @@ export const Hero: React.FC = () => {
                   <div className="flex flex-col gap-2.5 sm:gap-3 flex-1 justify-between">
                     
                     {/* Header Badge */}
-                    <div className="flex items-center gap-2 border-b border-gray-200 pb-2 sm:pb-3">
-                      <div className="w-6.5 h-6.5 sm:w-8.5 sm:h-8.5 rounded-lg bg-gray-200/50 text-gray-400 flex items-center justify-center shadow-inner shrink-0">
+                    <div className="flex items-center gap-1.5 border-b border-gray-200 pb-1.5 sm:pb-3">
+                      <div className="w-5.5 h-5.5 sm:w-8.5 sm:h-8.5 rounded bg-gray-200/50 text-gray-400 flex items-center justify-center shadow-inner shrink-0">
                         <ShieldAlert className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 stroke-[1.5]" />
                       </div>
                       <div className="min-w-0">
-                        <span className="font-sans text-[6.5px] sm:text-[8px] font-bold text-gray-400 tracking-[0.1em] block uppercase truncate">Alternative</span>
-                        <h3 className="heading-condensed text-[10px] min-[380px]:text-[12px] sm:text-base text-[var(--color-heading)] leading-none mt-0.5 opacity-65 truncate">Whole Body Powder</h3>
+                        <span className="font-sans text-[6px] min-[380px]:text-[7px] sm:text-[8px] font-bold text-gray-400 tracking-[0.1em] block uppercase truncate">Alternative</span>
+                        <h3 className="heading-condensed text-[9px] min-[380px]:text-[11px] sm:text-base text-[var(--color-heading)] leading-none mt-0.5 opacity-65 truncate">Whole Body Powder</h3>
                       </div>
                     </div>
 
-                    {/* Botanical Image - bigger! */}
-                    <div className="h-28 min-[380px]:h-36 sm:h-38 md:h-44 lg:h-48 w-full rounded-xl overflow-hidden relative border border-gray-200/50 shadow-sm shrink-0">
+                    {/* Botanical Image */}
+                    <div className="h-16 min-[380px]:h-22 sm:h-38 md:h-44 lg:h-48 w-full rounded-xl overflow-hidden relative border border-gray-200/50 shadow-sm shrink-0">
                       <img 
                         src="/images/ashwagandha_plant.png" 
                         alt="Ashwagandha Leaves and Berries" 
@@ -295,13 +295,13 @@ export const Hero: React.FC = () => {
                         draggable="false"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute bottom-1.5 left-1.5 bg-red-500 text-white font-sans font-bold text-[7px] sm:text-[9px] tracking-[0.1em] uppercase px-2 py-0.5 rounded shadow-sm">
+                      <div className="absolute bottom-1.5 left-1.5 bg-red-500 text-white font-sans font-bold text-[6px] sm:text-[7.5px] sm:text-[9px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded shadow-sm">
                         Leaf & Stem Filler
                       </div>
                     </div>
 
                     {/* Features List */}
-                    <div className="flex-1 flex flex-col justify-around py-2 sm:py-3.5">
+                    <div className="flex-1 flex flex-col justify-around py-1.5 sm:py-3.5">
                       {[
                         "Elevated Cytotoxicity (Risk)",
                         "Variable Effects (Whole Plant)",
@@ -309,10 +309,10 @@ export const Hero: React.FC = () => {
                         "Diluted Active Ingredients"
                       ].map((title, idx) => (
                         <div key={idx} className="flex gap-2 sm:gap-2.5 items-center">
-                          <div className="w-4 h-4 sm:w-5.5 sm:h-5.5 rounded-full bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+                          <div className="w-3.5 h-3.5 sm:w-5.5 sm:h-5.5 rounded-full bg-red-50 text-red-600 flex items-center justify-center shrink-0">
                             <X className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 stroke-[3]" />
                           </div>
-                          <span className="font-sans text-[9px] min-[380px]:text-[10px] sm:text-xs md:text-sm font-bold text-[var(--color-heading)] opacity-80 leading-tight">{title}</span>
+                          <span className="font-sans text-[8px] min-[380px]:text-[9px] sm:text-xs md:text-sm font-bold text-[var(--color-heading)] opacity-80 leading-tight">{title}</span>
                         </div>
                       ))}
                     </div>
@@ -529,7 +529,7 @@ export const Hero: React.FC = () => {
 
         {/* RIGHT COLUMN: Interactive Product Carousel */}
         <div className="group order-1 lg:order-2 lg:col-span-6 flex justify-center lg:justify-end items-center relative py-8 lg:py-0 z-10">
-          <div className="relative w-full max-w-[460px] md:max-w-[500px] h-[440px] min-[380px]:h-[480px] md:h-[540px] lg:h-[560px] flex items-center justify-center overflow-visible">
+          <div className="relative w-full max-w-[460px] md:max-w-[500px] h-[390px] min-[380px]:h-[420px] md:h-[580px] lg:h-[600px] flex items-center justify-center overflow-visible">
             
             {/* Carousel Container (Static on hover, swipeable on touch/drag) */}
             <motion.div
