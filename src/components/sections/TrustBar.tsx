@@ -3,7 +3,6 @@ import React from 'react';
 export const TrustBar: React.FC = () => {
   const items = [
     "FSSAI Certified",
-    "USDA Organic",
     "cGMP Manufactured",
     "Standardized 5% Withanolides",
     "Root-Only Extract",

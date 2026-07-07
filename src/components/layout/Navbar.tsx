@@ -135,7 +135,7 @@ export const Navbar: React.FC = () => {
                   key={link.name}
                   to={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="font-display text-xl font-medium tracking-wide border-b border-[rgba(10, 25, 47,0.1)] pb-3 hover:text-[var(--color-navy)] transition-colors lowercase"
+                  className="font-display text-lg font-bold tracking-widest border-b border-[rgba(10, 25, 47,0.1)] pb-3 hover:text-[var(--color-navy)] transition-colors uppercase"
                 >
                   {link.name}
                 </Link>
@@ -143,9 +143,9 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/verify"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center gap-2.5 font-display text-xl font-medium tracking-wide border-b border-[rgba(10, 25, 47,0.1)] pb-3 text-[var(--color-navy)] lowercase"
+                className="flex items-center gap-2.5 font-display text-lg font-bold tracking-widest border-b border-[rgba(10, 25, 47,0.1)] pb-3 text-[var(--color-navy)] uppercase"
               >
-                <ShieldCheckIcon size={20} color="var(--color-navy)" strokeWidth={1.5} />
+                <ShieldCheckIcon size={18} color="var(--color-navy)" strokeWidth={2} />
                 verify your product
               </Link>
             </nav>
@@ -157,8 +157,6 @@ export const Navbar: React.FC = () => {
               </p>
               <div className="flex justify-center gap-4 text-xs opacity-50">
                 <span>cGMP Manufactured</span>
-                <span>•</span>
-                <span>USDA Organic</span>
               </div>
             </div>
           </motion.div>

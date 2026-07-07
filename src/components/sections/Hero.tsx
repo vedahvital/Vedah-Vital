@@ -191,54 +191,146 @@ export const Hero: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.4 }}
-            className="w-full h-full flex items-center justify-center p-2 sm:p-4"
+            className="w-full h-full flex items-center justify-center p-1 sm:p-2.5"
           >
-            <div className="w-full sm:w-[90%] h-[96%] sm:h-[90%] bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-3 sm:p-4 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
+            <div className="w-full h-full bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-2.5 sm:p-3.5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
               
-              {/* Botanical Visual Image Banner */}
-              <div className="h-[35%] w-full rounded-2xl overflow-hidden relative border border-gray-200 shrink-0">
-                <img 
-                  src="/images/hero_comparison.webp" 
-                  alt="Root vs Leaf comparison" 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute inset-x-3 bottom-1.5 flex justify-between items-center text-white font-sans font-bold text-[7px] sm:text-[9px] tracking-wider uppercase">
-                  <span>KSM-66® (Root Only)</span>
-                  <span>Standard (Leaf Filler)</span>
+              {/* Header Title */}
+              <div className="w-full text-center pb-1.5 border-b border-gray-100 shrink-0">
+                <h3 className="font-sans text-[11px] sm:text-xs md:text-sm font-extrabold tracking-wide uppercase text-gray-900">
+                  KSM-66 ASHWAGANDHA: Root vs. Leaf
+                </h3>
+              </div>
+
+              {/* Grid content */}
+              <div className="flex-1 grid grid-cols-2 gap-2 sm:gap-3.5 my-1.5 sm:my-2.5 overflow-hidden">
+                
+                {/* LEFT PANEL: KSM-66 ASHWAGANDHA ROOT (Light Green) */}
+                <div className="bg-[#EAF6EE] border border-[#CCE8D5] rounded-2xl flex flex-col justify-between overflow-hidden relative text-[#1C4E2D]">
+                  {/* Full-width top image with bottom gradient fade */}
+                  <div className="h-16 min-[380px]:h-20 sm:h-28 w-full overflow-hidden relative shrink-0">
+                    <img 
+                      src="/images/ashwagandha_root.png" 
+                      alt="Ashwagandha Root" 
+                      className="w-full h-full object-cover select-none"
+                      draggable="false"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#EAF6EE] to-transparent pointer-events-none" />
+                  </div>
+
+                  {/* Content container */}
+                  <div className="flex-1 p-1.5 min-[380px]:p-2 sm:p-3 flex flex-col justify-between overflow-hidden">
+                    <div className="flex flex-col gap-1.5 sm:gap-2.5">
+                      <span className="font-sans text-[7.5px] min-[380px]:text-[8.5px] sm:text-[10px] font-extrabold uppercase text-[#1C4E2D] tracking-wider text-center">
+                        KSM-66 ASHWAGANDHA ROOT
+                      </span>
+
+                      {/* Bullet List and Icons */}
+                      <div className="flex justify-between items-start gap-1">
+                        <ul className="flex-1 flex flex-col gap-0.5 min-[380px]:gap-1 sm:gap-2 text-left font-sans text-[6.5px] min-[380px]:text-[7.5px] sm:text-[9.5px] md:text-[10px] text-gray-900 font-bold leading-tight">
+                          <li>• Standardized Extract</li>
+                          <li>• High Concentration of Withanolides</li>
+                          <li>• Clinically Researched (KSM-66)</li>
+                          <li>• Traditional Use</li>
+                          <li>• Potent Root Essence</li>
+                          <li>• Common in Supplements</li>
+                          <li>• Supports Stress & Anxiety</li>
+                          <li>• Enhanced Cortisol Balance</li>
+                        </ul>
+                        
+                        {/* Icons right stack */}
+                        <div className="flex flex-col gap-2 min-[380px]:gap-2.5 sm:gap-4 shrink-0 py-1 opacity-75">
+                          {/* Stress/Sparks */}
+                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1C4E2D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="M12 2v3M4.9 4.9l2.1 2.1M19.1 4.9l-2.1 2.1M2 12h3M19 12h3M12 17c-2.7 0-5-2.2-5-5s2.3-5 5-5 5 2.2 5 5-2.3 5-5 5Z" />
+                          </svg>
+                          {/* Brain */}
+                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1C4E2D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.9-1M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.9-1" />
+                          </svg>
+                          {/* Lightning */}
+                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1C4E2D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="M13 2 L3 14h9l-1 8 10-12h-9l1-8Z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* RIGHT PANEL: ASHWAGANDHA LEAF (Light Red) */}
+                <div className="bg-[#FDF0F0] border border-[#F6D0D0] rounded-2xl flex flex-col justify-between overflow-hidden relative text-[#8C2323]">
+                  {/* Full-width top image with bottom gradient fade */}
+                  <div className="h-16 min-[380px]:h-20 sm:h-28 w-full overflow-hidden relative shrink-0">
+                    <img 
+                      src="/images/ashwagandha_plant.png" 
+                      alt="Ashwagandha Leaf" 
+                      className="w-full h-full object-cover select-none"
+                      draggable="false"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#FDF0F0] to-transparent pointer-events-none" />
+                  </div>
+
+                  {/* Content container */}
+                  <div className="flex-1 p-1.5 min-[380px]:p-2 sm:p-3 flex flex-col justify-between overflow-hidden">
+                    <div className="flex flex-col gap-1.5 sm:gap-2.5">
+                      <span className="font-sans text-[7.5px] min-[380px]:text-[8.5px] sm:text-[10px] font-extrabold uppercase text-[#8C2323] tracking-wider text-center">
+                        ASHWAGANDHA LEAF
+                      </span>
+
+                      {/* Bullet List and Icons */}
+                      <div className="flex justify-between items-start gap-1">
+                        <ul className="flex-1 flex flex-col gap-0.5 min-[380px]:gap-1 sm:gap-2 text-left font-sans text-[6.5px] min-[380px]:text-[7.5px] sm:text-[9.5px] md:text-[10px] text-gray-900 font-bold leading-tight">
+                          <li>• Lower Cost Option</li>
+                          <li>• Less Common in Supplements</li>
+                          <li>• Can Contain Higher Withaferin A</li>
+                          <li>• Varying Withanolide Profile</li>
+                          <li>• Used in some formulations</li>
+                          <li>• Potential Side Effects (Higher Withaferin A)</li>
+                          <li>• Focus on Plant Parts</li>
+                          <li>• Traditional and Modern Uses</li>
+                        </ul>
+                        
+                        {/* Icons right stack */}
+                        <div className="flex flex-col gap-2 min-[380px]:gap-2.5 sm:gap-4 shrink-0 py-1 opacity-70">
+                          {/* Person */}
+                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#8C2323]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <circle cx="12" cy="8" r="4" />
+                            <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+                          </svg>
+                          {/* Plant */}
+                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#8C2323]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="M12 22V12M12 12c3 0 5-1.5 5-4s-2-2-5 1c-3-3-5-3.5-5-1s2 4 5 4Z" />
+                          </svg>
+                          {/* Alert */}
+                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#8C2323]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z" />
+                            <line x1="12" y1="9" x2="12" y2="13" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Bottom footer specs */}
+              <div className="w-full flex flex-col gap-1.5 shrink-0">
+                <div className="self-center bg-[#E1ECF7] border border-[#C6D9EC] rounded-full px-4 py-0.5 shadow-sm">
+                  <span className="font-sans text-[7.5px] sm:text-[9.5px] font-extrabold tracking-wider uppercase text-gray-900">
+                    KEY DIFFERENCES
+                  </span>
+                </div>
+                <div className="grid grid-cols-4 gap-0.5 border-t border-gray-100 pt-1.5 text-[5px] min-[380px]:text-[6px] sm:text-[7.5px] md:text-[8px] font-extrabold uppercase text-gray-800 tracking-wider text-center leading-normal">
+                  <div className="border-r border-gray-200 pr-1 flex items-center justify-center">ACTIVE COMPOUNDS (e.g., Withaferin A)</div>
+                  <div className="border-r border-gray-200 px-1 flex items-center justify-center">PURITY & POTENCY</div>
+                  <div className="border-r border-gray-200 px-1 flex items-center justify-center">CLINICAL RESEARCH EVIDENCE</div>
+                  <div className="pl-1 flex items-center justify-center">SAFETY PROFILE</div>
                 </div>
               </div>
 
-              {/* Simplified Comparison Table */}
-              <div className="flex-1 flex flex-col justify-center gap-1.5 my-2 text-left">
-                <div className="grid grid-cols-12 gap-1 text-[9px] sm:text-[10px] md:text-xs font-sans font-bold border-b border-gray-100 pb-1 text-gray-400">
-                  <div className="col-span-5">Feature</div>
-                  <div className="col-span-4 text-[var(--color-navy)]">KSM-66®</div>
-                  <div className="col-span-3">Standard</div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-1 text-[9px] sm:text-[10px] md:text-xs font-sans border-b border-gray-50 py-1 items-center">
-                  <div className="col-span-5 font-medium text-gray-600">Cytotoxicity</div>
-                  <div className="col-span-4 font-bold text-emerald-600">Safe (≤0.1% WaA)</div>
-                  <div className="col-span-3 text-red-500 font-bold">Risk (2.5% WaA)</div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-1 text-[9px] sm:text-[10px] md:text-xs font-sans border-b border-gray-50 py-1 items-center">
-                  <div className="col-span-5 font-medium text-gray-600">Withanolides</div>
-                  <div className="col-span-4 font-bold text-emerald-600">5% Standardized</div>
-                  <div className="col-span-3 text-red-500">Unspecified</div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-1 text-[9px] sm:text-[10px] md:text-xs font-sans py-1 items-center">
-                  <div className="col-span-5 font-medium text-gray-600">Clinical Proof</div>
-                  <div className="col-span-4 font-bold text-emerald-600">20+ Trials</div>
-                  <div className="col-span-3 text-red-500">None</div>
-                </div>
-              </div>
-
-              <div className="text-center text-[8.5px] sm:text-[10px] font-sans text-gray-400 border-t border-gray-100 pt-1.5 shrink-0">
-                KSM-66® is the highest concentration, most bioavailable root extract.
-              </div>
             </div>
           </motion.div>
         );

@@ -8,13 +8,6 @@ export const FinalCTA: React.FC = () => {
   return (
     <section className="bg-white text-[var(--color-text)] py-14 md:py-18 relative overflow-clip border-b border-[rgba(10, 25, 47,0.15)]">
       
-      {/* Bottom wave backdrop decoration — reduced opacity on mobile to prevent contrast issues */}
-      <div className="absolute right-0 bottom-0 w-full lg:w-[45%] h-[80vh] pointer-events-none z-0 opacity-10 md:opacity-50 text-[var(--color-navy)]">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full fill-current">
-          <path d="M0 100 C40 100, 60 70, 70 40 C80 15, 90 5, 100 0 L100 100 Z" />
-        </svg>
-      </div>
-
       <div className="max-w-[var(--max-width)] mx-auto px-6 md:px-12 flex flex-col gap-14 md:gap-18 relative z-10">
         
         {/* Main Grid Content */}

@@ -31,7 +31,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!assets|image|images|favicon.svg|favicon.ico).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
