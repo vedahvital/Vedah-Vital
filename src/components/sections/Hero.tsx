@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Award, Check, ShieldAlert, X } from 'lucide-react';
 import ShieldCheck from '../ui/icons/shield-check';
 import { Button } from '../ui/Button';
 
@@ -193,7 +193,7 @@ export const Hero: React.FC = () => {
             transition={{ duration: 0.4 }}
             className="w-full h-full flex items-center justify-center p-1 sm:p-2.5"
           >
-            <div className="w-full h-full bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-2.5 sm:p-3.5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
+            <div className="w-full h-full bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-2.5 sm:p-4 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
               
               {/* Header Title */}
               <div className="w-full text-center pb-1.5 border-b border-gray-100 shrink-0">
@@ -203,114 +203,150 @@ export const Hero: React.FC = () => {
               </div>
 
               {/* Grid content */}
-              <div className="flex-1 grid grid-cols-2 gap-2 sm:gap-3.5 my-1.5 sm:my-2.5 overflow-hidden">
+              <div className="flex-1 grid grid-cols-2 gap-2.5 sm:gap-4 my-2 overflow-hidden items-stretch">
                 
-                {/* LEFT PANEL: KSM-66 ASHWAGANDHA ROOT (Light Green) */}
-                <div className="bg-[#EAF6EE] border border-[#CCE8D5] rounded-2xl flex flex-col justify-between overflow-hidden relative text-[#1C4E2D]">
-                  {/* Full-width top image with bottom gradient fade */}
-                  <div className="h-16 min-[380px]:h-20 sm:h-28 w-full overflow-hidden relative shrink-0">
-                    <img 
-                      src="/images/ashwagandha_root.png" 
-                      alt="Ashwagandha Root" 
-                      className="w-full h-full object-cover select-none"
-                      draggable="false"
-                    />
-                    <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#EAF6EE] to-transparent pointer-events-none" />
-                  </div>
+                {/* LEFT COLUMN: Vedah Vital (KSM-66) - Rich Navy/Gold Spotlight Card */}
+                <div 
+                  className="rounded-2xl p-2.5 sm:p-4 flex flex-col justify-between border relative overflow-hidden text-left"
+                  style={{
+                    background: 'linear-gradient(145deg, #1B365D 0%, #0A192F 100%)',
+                    borderColor: 'rgba(255, 226, 150, 0.25)',
+                    boxShadow: '0 8px 24px -10px rgba(10, 25, 47, 0.3)'
+                  }}
+                >
+                  {/* Golden foil top edge line */}
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#D9A05B] via-[#FFE296] to-[#D9A05B]" />
 
-                  {/* Content container */}
-                  <div className="flex-1 p-1.5 min-[380px]:p-2 sm:p-3 flex flex-col justify-between overflow-hidden">
-                    <div className="flex flex-col gap-1.5 sm:gap-2.5">
-                      <span className="font-sans text-[7.5px] min-[380px]:text-[8.5px] sm:text-[10px] font-extrabold uppercase text-[#1C4E2D] tracking-wider text-center">
-                        KSM-66 ASHWAGANDHA ROOT
-                      </span>
-
-                      {/* Bullet List and Icons */}
-                      <div className="flex justify-between items-start gap-1">
-                        <ul className="flex-1 flex flex-col gap-0.5 min-[380px]:gap-1 sm:gap-2 text-left font-sans text-[6.5px] min-[380px]:text-[7.5px] sm:text-[9.5px] md:text-[10px] text-gray-900 font-bold leading-tight">
-                          <li>• Standardized Extract</li>
-                          <li>• High Concentration of Withanolides</li>
-                          <li>• Clinically Researched (KSM-66)</li>
-                          <li>• Traditional Use</li>
-                          <li>• Potent Root Essence</li>
-                          <li>• Common in Supplements</li>
-                          <li>• Supports Stress & Anxiety</li>
-                          <li>• Enhanced Cortisol Balance</li>
-                        </ul>
-                        
-                        {/* Icons right stack */}
-                        <div className="flex flex-col gap-2 min-[380px]:gap-2.5 sm:gap-4 shrink-0 py-1 opacity-75">
-                          {/* Stress/Sparks */}
-                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1C4E2D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="M12 2v3M4.9 4.9l2.1 2.1M19.1 4.9l-2.1 2.1M2 12h3M19 12h3M12 17c-2.7 0-5-2.2-5-5s2.3-5 5-5 5 2.2 5 5-2.3 5-5 5Z" />
-                          </svg>
-                          {/* Brain */}
-                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1C4E2D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.9-1M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.9-1" />
-                          </svg>
-                          {/* Lightning */}
-                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#1C4E2D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="M13 2 L3 14h9l-1 8 10-12h-9l1-8Z" />
-                          </svg>
-                        </div>
+                  <div className="flex flex-col gap-2 sm:gap-3 flex-1 justify-between">
+                    
+                    {/* Header Badge */}
+                    <div className="flex items-center gap-2 border-b border-white/10 pb-2">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-white/10 text-[#FFE296] flex items-center justify-center shadow-md shrink-0">
+                        <Award className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 stroke-[1.5]" />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="font-sans text-[6.5px] sm:text-[8px] font-bold text-[#FFE296] tracking-[0.1em] block uppercase truncate">Standardized Root</span>
+                        <h3 className="heading-condensed text-[9px] sm:text-sm md:text-base text-white leading-none mt-0.5 truncate">Vedah Vital KSM-66</h3>
                       </div>
                     </div>
+
+                    {/* Botanical Image - bigger! */}
+                    <div className="h-16 min-[380px]:h-22 sm:h-30 md:h-36 w-full rounded-xl overflow-hidden relative border border-white/10 shadow-sm shrink-0">
+                      <img 
+                        src="/images/ashwagandha_root.png" 
+                        alt="Organic Ashwagandha Tuberous Root" 
+                        className="w-full h-full object-cover select-none"
+                        draggable="false"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/80 via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute bottom-1.5 left-1.5 bg-[#FFE296] text-[var(--color-navy-deep)] font-sans font-bold text-[6px] sm:text-[8px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded shadow-sm">
+                        100% Root Only
+                      </div>
+                    </div>
+
+                    {/* Features List */}
+                    <div className="flex-1 flex flex-col justify-center gap-1.5 sm:gap-2.5 mt-1 sm:mt-2">
+                      {[
+                        {
+                          title: "Lowest Cytotoxicity (Safe)",
+                          desc: "Withaferin A minimized (often ≤ 0.1%). Safe for long-term daily use."
+                        },
+                        {
+                          title: "Standardized & Bioactive",
+                          desc: "Contains full spectrum of withanolides at 5% concentration."
+                        },
+                        {
+                          title: "GRAS Affirmed & Certified",
+                          desc: "Meets highest safety and purity standards."
+                        },
+                        {
+                          title: "Traditional Wisdom",
+                          desc: "Matches traditional Ayurvedic root use, validated by 20+ human trials."
+                        }
+                      ].map((item, idx) => (
+                        <div key={idx} className="flex gap-1.5 sm:gap-2 items-start">
+                          <div className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 rounded-full bg-[#FFE296]/15 text-[#FFE296] flex items-center justify-center shrink-0 mt-0.5">
+                            <Check className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 stroke-[3]" />
+                          </div>
+                          <div className="flex flex-col min-w-0">
+                            <span className="font-sans text-[7.5px] min-[380px]:text-[8.5px] sm:text-[10px] md:text-xs font-bold text-white leading-tight">{item.title}</span>
+                            <p className="font-sans text-[9px] md:text-[10.5px] text-[#A3C2F0] opacity-95 font-light leading-relaxed mt-0.5 hidden sm:block">{item.desc}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
                   </div>
                 </div>
 
-                {/* RIGHT PANEL: ASHWAGANDHA LEAF (Light Red) */}
-                <div className="bg-[#FDF0F0] border border-[#F6D0D0] rounded-2xl flex flex-col justify-between overflow-hidden relative text-[#8C2323]">
-                  {/* Full-width top image with bottom gradient fade */}
-                  <div className="h-16 min-[380px]:h-20 sm:h-28 w-full overflow-hidden relative shrink-0">
-                    <img 
-                      src="/images/ashwagandha_plant.png" 
-                      alt="Ashwagandha Leaf" 
-                      className="w-full h-full object-cover select-none"
-                      draggable="false"
-                    />
-                    <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#FDF0F0] to-transparent pointer-events-none" />
-                  </div>
-
-                  {/* Content container */}
-                  <div className="flex-1 p-1.5 min-[380px]:p-2 sm:p-3 flex flex-col justify-between overflow-hidden">
-                    <div className="flex flex-col gap-1.5 sm:gap-2.5">
-                      <span className="font-sans text-[7.5px] min-[380px]:text-[8.5px] sm:text-[10px] font-extrabold uppercase text-[#8C2323] tracking-wider text-center">
-                        ASHWAGANDHA LEAF
-                      </span>
-
-                      {/* Bullet List and Icons */}
-                      <div className="flex justify-between items-start gap-1">
-                        <ul className="flex-1 flex flex-col gap-0.5 min-[380px]:gap-1 sm:gap-2 text-left font-sans text-[6.5px] min-[380px]:text-[7.5px] sm:text-[9.5px] md:text-[10px] text-gray-900 font-bold leading-tight">
-                          <li>• Lower Cost Option</li>
-                          <li>• Less Common in Supplements</li>
-                          <li>• Can Contain Higher Withaferin A</li>
-                          <li>• Varying Withanolide Profile</li>
-                          <li>• Used in some formulations</li>
-                          <li>• Potential Side Effects (Higher Withaferin A)</li>
-                          <li>• Focus on Plant Parts</li>
-                          <li>• Traditional and Modern Uses</li>
-                        </ul>
-                        
-                        {/* Icons right stack */}
-                        <div className="flex flex-col gap-2 min-[380px]:gap-2.5 sm:gap-4 shrink-0 py-1 opacity-70">
-                          {/* Person */}
-                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#8C2323]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <circle cx="12" cy="8" r="4" />
-                            <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
-                          </svg>
-                          {/* Plant */}
-                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#8C2323]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="M12 22V12M12 12c3 0 5-1.5 5-4s-2-2-5 1c-3-3-5-3.5-5-1s2 4 5 4Z" />
-                          </svg>
-                          {/* Alert */}
-                          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#8C2323]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z" />
-                            <line x1="12" y1="9" x2="12" y2="13" />
-                            <line x1="12" y1="17" x2="12.01" y2="17" />
-                          </svg>
-                        </div>
+                {/* RIGHT COLUMN: Alternative (Whole Body) - Muted Grey Card */}
+                <div 
+                  className="rounded-2xl p-2.5 sm:p-4 flex flex-col justify-between border relative text-left"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(10, 25, 47, 0.01) 0%, rgba(10, 25, 47, 0.03) 100%)',
+                    borderColor: 'rgba(10, 25, 47, 0.08)',
+                    boxShadow: '0 8px 20px -10px rgba(10, 25, 47, 0.03)'
+                  }}
+                >
+                  <div className="flex flex-col gap-2 sm:gap-3 flex-1 justify-between">
+                    
+                    {/* Header Badge */}
+                    <div className="flex items-center gap-2 border-b border-gray-200 pb-2">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gray-200/50 text-gray-400 flex items-center justify-center shadow-inner shrink-0">
+                        <ShieldAlert className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 stroke-[1.5]" />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="font-sans text-[6.5px] sm:text-[8px] font-bold text-gray-400 tracking-[0.1em] block uppercase truncate">Alternative</span>
+                        <h3 className="heading-condensed text-[9px] sm:text-sm md:text-base text-[var(--color-heading)] leading-none mt-0.5 opacity-65 truncate">Whole Body Powder</h3>
                       </div>
                     </div>
+
+                    {/* Botanical Image - bigger! */}
+                    <div className="h-16 min-[380px]:h-22 sm:h-30 md:h-36 w-full rounded-xl overflow-hidden relative border border-gray-200/50 shadow-sm shrink-0">
+                      <img 
+                        src="/images/ashwagandha_plant.png" 
+                        alt="Ashwagandha Leaves and Berries" 
+                        className="w-full h-full object-cover select-none"
+                        draggable="false"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute bottom-1.5 left-1.5 bg-red-500 text-white font-sans font-bold text-[6px] sm:text-[8px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded shadow-sm">
+                        Leaf & Stem Filler
+                      </div>
+                    </div>
+
+                    {/* Features List */}
+                    <div className="flex-1 flex flex-col justify-center gap-1.5 sm:gap-2.5 mt-1 sm:mt-2">
+                      {[
+                        {
+                          title: "Elevated Cytotoxicity (Risk)",
+                          desc: "Leaf/stem inclusion spikes Withaferin A, presenting a toxicity risk at higher doses."
+                        },
+                        {
+                          title: "Variable Effects (Leaf)",
+                          desc: "Inconsistent withanolide profile altering traditional root efficacy."
+                        },
+                        {
+                          title: "Non-Traditional Use",
+                          desc: "Historically, leaves were only used topically, not ingested internally."
+                        },
+                        {
+                          title: "Diluted Active Ingredients",
+                          desc: "Often mixed with cheap leaf fillers to artificially pad product weights."
+                        }
+                      ].map((item, idx) => (
+                        <div key={idx} className="flex gap-1.5 sm:gap-2 items-start">
+                          <div className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 rounded-full bg-red-50 text-red-600 flex items-center justify-center shrink-0 mt-0.5">
+                            <X className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 stroke-[3]" />
+                          </div>
+                          <div className="flex flex-col min-w-0">
+                            <span className="font-sans text-[7.5px] min-[380px]:text-[8.5px] sm:text-[10px] md:text-xs font-bold text-[var(--color-heading)] opacity-80 leading-tight">{item.title}</span>
+                            <p className="font-sans text-[9px] md:text-[10.5px] text-[var(--color-text)] opacity-80 font-light leading-relaxed mt-0.5 hidden sm:block">{item.desc}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
                   </div>
                 </div>
 
