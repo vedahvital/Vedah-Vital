@@ -9,13 +9,16 @@ export const Hero: React.FC = () => {
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isEnlarged, setIsEnlarged] = useState(false);
 
   const resetTimer = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
+    if (!isPlaying) return;
     intervalRef.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % 5);
     }, 5000);
-  }, []);
+  }, [isPlaying]);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % 5);
@@ -32,7 +35,22 @@ export const Hero: React.FC = () => {
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [resetTimer]);
 
-  const renderSlideContent = (slideIndex: number) => {
+  // Scroll or Touch to exit enlarged view and resume sliding
+  useEffect(() => {
+    if (!isEnlarged) return;
+    const handleExit = () => {
+      setIsEnlarged(false);
+      setIsPlaying(true);
+    };
+    window.addEventListener('scroll', handleExit, { passive: true });
+    window.addEventListener('touchmove', handleExit, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleExit);
+      window.removeEventListener('touchmove', handleExit);
+    };
+  }, [isEnlarged]);
+
+  const renderSlideContent = (slideIndex: number, isEnlargedMode: boolean = false) => {
     switch (slideIndex) {
       case 0:
         return (
@@ -231,7 +249,7 @@ export const Hero: React.FC = () => {
                     </div>
 
                     {/* Botanical Image */}
-                    <div className="h-16 min-[380px]:h-22 sm:h-38 md:h-44 lg:h-48 w-full rounded-xl overflow-hidden relative border border-white/10 shadow-sm shrink-0">
+                    <div className={`${isEnlargedMode ? 'h-24 min-[380px]:h-32 sm:h-44 md:h-52' : 'h-16 min-[380px]:h-22 sm:h-38 md:h-44 lg:h-48'} w-full rounded-xl overflow-hidden relative border border-white/10 shadow-sm shrink-0`}>
                       <img 
                         src="/images/ashwagandha_root.png" 
                         alt="Organic Ashwagandha Tuberous Root" 
@@ -254,7 +272,7 @@ export const Hero: React.FC = () => {
                       ].map((title, idx) => (
                         <div key={idx} className="flex gap-1.5 sm:gap-2.5 items-center">
                           <div className="w-3.5 h-3.5 sm:w-5.5 sm:h-5.5 rounded-full bg-[#FFE296]/15 text-[#FFE296] flex items-center justify-center shrink-0">
-                            <Check className="w-2 h-2 sm:w-3 sm:h-3 stroke-[3]" />
+                            <Check className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 stroke-[3]" />
                           </div>
                           <span className="font-sans text-[8px] min-[380px]:text-[9px] sm:text-xs md:text-sm font-bold text-white leading-tight">{title}</span>
                         </div>
@@ -287,7 +305,7 @@ export const Hero: React.FC = () => {
                     </div>
 
                     {/* Botanical Image */}
-                    <div className="h-16 min-[380px]:h-22 sm:h-38 md:h-44 lg:h-48 w-full rounded-xl overflow-hidden relative border border-gray-200/50 shadow-sm shrink-0">
+                    <div className={`${isEnlargedMode ? 'h-24 min-[380px]:h-32 sm:h-44 md:h-52' : 'h-16 min-[380px]:h-22 sm:h-38 md:h-44 lg:h-48'} w-full rounded-xl overflow-hidden relative border border-gray-200/50 shadow-sm shrink-0`}>
                       <img 
                         src="/images/ashwagandha_plant.png" 
                         alt="Ashwagandha Leaves and Berries" 
@@ -295,7 +313,7 @@ export const Hero: React.FC = () => {
                         draggable="false"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute bottom-1.5 left-1.5 bg-red-500 text-white font-sans font-bold text-[6px] sm:text-[7.5px] sm:text-[9px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded shadow-sm">
+                      <div className="absolute bottom-1.5 left-1.5 bg-red-500 text-white font-sans font-bold text-[7px] sm:text-[9px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded shadow-sm">
                         Leaf & Stem Filler
                       </div>
                     </div>
@@ -549,9 +567,15 @@ export const Hero: React.FC = () => {
                   prevSlide();
                 }
               }}
+              onTap={() => {
+                if (!isEnlarged) {
+                  setIsEnlarged(true);
+                  setIsPlaying(false);
+                }
+              }}
             >
               <AnimatePresence mode="wait">
-                {renderSlideContent(currentSlide)}
+                {renderSlideContent(currentSlide, false)}
               </AnimatePresence>
             </motion.div>
 
@@ -593,6 +617,47 @@ export const Hero: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Enlarged Slide Modal Overlay */}
+      <AnimatePresence>
+        {isEnlarged && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => {
+              setIsEnlarged(false);
+              setIsPlaying(true);
+            }}
+            className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-md flex items-center justify-center p-4 cursor-zoom-out"
+          >
+            {/* Enlarged Card Wrapper */}
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-[500px] h-[520px] sm:h-[580px] md:h-[600px] cursor-default"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking card itself
+            >
+              {/* Close Button */}
+              <button 
+                onClick={() => {
+                  setIsEnlarged(false);
+                  setIsPlaying(true);
+                }}
+                className="absolute -top-12 right-2 text-white/80 hover:text-white flex items-center gap-1.5 font-sans text-xs uppercase tracking-wider bg-white/10 hover:bg-white/20 rounded-full px-3.5 py-1.5 transition-all cursor-pointer border border-white/15 focus:outline-none"
+              >
+                <X className="w-3.5 h-3.5" />
+                Close
+              </button>
+
+              {renderSlideContent(currentSlide, true)}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </section>
   );
 
