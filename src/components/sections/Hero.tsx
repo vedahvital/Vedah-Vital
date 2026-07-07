@@ -196,18 +196,18 @@ export const Hero: React.FC = () => {
             <div className="w-full h-full bg-white/95 backdrop-blur-md border border-white/20 rounded-3xl shadow-2xl p-2.5 sm:p-4 md:p-5 flex flex-col justify-between z-10 overflow-hidden text-[var(--color-heading)]">
               
               {/* Header Title */}
-              <div className="w-full text-center pb-1.5 border-b border-gray-100 shrink-0">
-                <h3 className="font-sans text-[11px] sm:text-xs md:text-sm font-extrabold tracking-wide uppercase text-gray-900">
+              <div className="w-full text-center pb-1 border-b border-gray-100 shrink-0">
+                <h3 className="font-sans text-[10.5px] sm:text-xs md:text-sm font-extrabold tracking-wide uppercase text-gray-900">
                   KSM-66 ASHWAGANDHA: Root vs. Whole Plant
                 </h3>
               </div>
 
               {/* Grid content */}
-              <div className="flex-1 grid grid-cols-2 gap-2.5 sm:gap-4 my-2 overflow-hidden items-stretch">
+              <div className="flex-1 grid grid-cols-2 gap-2 sm:gap-4 my-1.5 overflow-hidden items-stretch">
                 
                 {/* LEFT COLUMN: Vedah Vital (KSM-66) - Rich Navy/Gold Spotlight Card */}
                 <div 
-                  className="rounded-2xl p-3 sm:p-4 md:p-5 flex flex-col justify-between border relative overflow-hidden text-left"
+                  className="rounded-2xl p-2.5 sm:p-4 flex flex-col justify-between border relative overflow-hidden text-left"
                   style={{
                     background: 'linear-gradient(145deg, #1B365D 0%, #0A192F 100%)',
                     borderColor: 'rgba(255, 226, 150, 0.25)',
@@ -217,21 +217,21 @@ export const Hero: React.FC = () => {
                   {/* Golden foil top edge line */}
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#D9A05B] via-[#FFE296] to-[#D9A05B]" />
 
-                  <div className="flex flex-col gap-2.5 sm:gap-4 flex-1 justify-between">
+                  <div className="flex flex-col gap-2 sm:gap-3 flex-1 justify-between">
                     
                     {/* Header Badge */}
-                    <div className="flex items-center gap-2 border-b border-white/10 pb-2.5 sm:pb-3">
-                      <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-white/10 text-[#FFE296] flex items-center justify-center shadow-md shrink-0">
-                        <Award className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.5]" />
+                    <div className="flex items-center gap-1.5 border-b border-white/10 pb-1.5 sm:pb-2.5">
+                      <div className="w-5 h-5 sm:w-8 sm:h-8 rounded bg-white/10 text-[#FFE296] flex items-center justify-center shadow-md shrink-0">
+                        <Award className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 stroke-[1.5]" />
                       </div>
                       <div className="min-w-0">
-                        <span className="font-sans text-[7.5px] min-[380px]:text-[8.5px] sm:text-[10px] font-bold text-[#FFE296] tracking-[0.1em] block uppercase truncate">Standardized Root</span>
-                        <h3 className="heading-condensed text-[10px] min-[380px]:text-[12px] sm:text-base text-white leading-none mt-0.5 truncate">Vedah Vital KSM-66</h3>
+                        <span className="font-sans text-[6px] min-[380px]:text-[7.5px] sm:text-[9px] font-bold text-[#FFE296] tracking-[0.08em] block uppercase truncate">Standardized Root</span>
+                        <h3 className="heading-condensed text-[9.5px] min-[380px]:text-[11.5px] sm:text-base text-white leading-none mt-0.5 truncate">Vedah Vital KSM-66</h3>
                       </div>
                     </div>
 
                     {/* Botanical Image - bigger! */}
-                    <div className="h-20 min-[380px]:h-26 sm:h-32 md:h-38 w-full rounded-xl overflow-hidden relative border border-white/10 shadow-sm shrink-0">
+                    <div className="h-24 min-[380px]:h-32 sm:h-36 md:h-40 w-full rounded-xl overflow-hidden relative border border-white/10 shadow-sm shrink-0">
                       <img 
                         src="/images/ashwagandha_root.png" 
                         alt="Organic Ashwagandha Tuberous Root" 
@@ -239,38 +239,38 @@ export const Hero: React.FC = () => {
                         draggable="false"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/80 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute bottom-1.5 left-1.5 bg-[#FFE296] text-[var(--color-navy-deep)] font-sans font-bold text-[7px] sm:text-[9px] tracking-[0.1em] uppercase px-2 py-0.5 rounded shadow-sm">
+                      <div className="absolute bottom-1 left-1 bg-[#FFE296] text-[var(--color-navy-deep)] font-sans font-bold text-[6px] min-[380px]:text-[7.5px] sm:text-[9px] tracking-[0.08em] uppercase px-1.5 py-0.5 rounded shadow-sm">
                         100% Root Only
                       </div>
                     </div>
 
                     {/* Features List */}
-                    <div className="flex-1 flex flex-col justify-center gap-2 sm:gap-3.5 mt-2 sm:mt-3">
+                    <div className="flex-1 flex flex-col justify-center gap-1.5 sm:gap-2.5 mt-1 sm:mt-2">
                       {[
                         {
                           title: "Lowest Cytotoxicity (Safe)",
-                          desc: "Withaferin A minimized (often ≤ 0.1%). Safe for long-term daily use."
+                          desc: "Withaferin A minimized (often ≤ 0.1%). Safe for daily use."
                         },
                         {
                           title: "Standardized & Bioactive",
-                          desc: "Contains full spectrum of withanolides at 5% concentration."
+                          desc: "Full spectrum of active withanolides at 5% concentration."
                         },
                         {
-                          title: "GRAS Affirmed & Certified",
-                          desc: "Meets highest safety and purity standards."
+                          title: "GRAS Affirmed",
+                          desc: "Meets highest safety and purity standard certifications."
                         },
                         {
                           title: "Traditional Wisdom",
-                          desc: "Matches traditional Ayurvedic root use, validated by 20+ human trials."
+                          desc: "Matches Ayurvedic root use, backed by 20+ human trials."
                         }
                       ].map((item, idx) => (
-                        <div key={idx} className="flex gap-2 sm:gap-2.5 items-start">
-                          <div className="w-4 h-4 sm:w-5.5 sm:h-5.5 rounded-full bg-[#FFE296]/15 text-[#FFE296] flex items-center justify-center shrink-0 mt-0.5">
-                            <Check className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 stroke-[3]" />
+                        <div key={idx} className="flex gap-1.5 sm:gap-2 items-start">
+                          <div className="w-3 h-3 sm:w-4.5 sm:h-4.5 rounded-full bg-[#FFE296]/15 text-[#FFE296] flex items-center justify-center shrink-0 mt-0.5">
+                            <Check className="w-2 h-2 sm:w-3 sm:h-3 stroke-[3]" />
                           </div>
-                          <div className="flex flex-col min-w-0">
-                            <span className="font-sans text-[8.5px] min-[380px]:text-[10px] sm:text-xs md:text-sm font-bold text-white leading-tight">{item.title}</span>
-                            <p className="font-sans text-[9px] md:text-[10.5px] text-[#A3C2F0] opacity-95 font-light leading-relaxed mt-0.5 hidden sm:block">{item.desc}</p>
+                          <div className="flex flex-col min-w-0 text-left">
+                            <span className="font-sans text-[7.5px] min-[380px]:text-[8.5px] sm:text-[10px] md:text-xs font-bold text-white leading-tight">{item.title}</span>
+                            <p className="font-sans text-[6.5px] min-[380px]:text-[7.5px] sm:text-[9px] md:text-[10.5px] text-[#A3C2F0] opacity-90 font-light leading-snug mt-0.5 block">{item.desc}</p>
                           </div>
                         </div>
                       ))}
@@ -281,28 +281,28 @@ export const Hero: React.FC = () => {
 
                 {/* RIGHT COLUMN: Alternative (Whole Body) - Muted Grey Card */}
                 <div 
-                  className="rounded-2xl p-3 sm:p-4 md:p-5 flex flex-col justify-between border relative text-left"
+                  className="rounded-2xl p-2.5 sm:p-4 flex flex-col justify-between border relative text-left"
                   style={{
                     background: 'linear-gradient(135deg, rgba(10, 25, 47, 0.01) 0%, rgba(10, 25, 47, 0.03) 100%)',
                     borderColor: 'rgba(10, 25, 47, 0.08)',
                     boxShadow: '0 8px 20px -10px rgba(10, 25, 47, 0.03)'
                   }}
                 >
-                  <div className="flex flex-col gap-2.5 sm:gap-4 flex-1 justify-between">
+                  <div className="flex flex-col gap-2 sm:gap-3 flex-1 justify-between">
                     
                     {/* Header Badge */}
-                    <div className="flex items-center gap-2 border-b border-gray-200 pb-2.5 sm:pb-3">
-                      <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-gray-200/50 text-gray-400 flex items-center justify-center shadow-inner shrink-0">
-                        <ShieldAlert className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.5]" />
+                    <div className="flex items-center gap-1.5 border-b border-gray-200 pb-1.5 sm:pb-2.5">
+                      <div className="w-5 h-5 sm:w-8 sm:h-8 rounded bg-gray-200/50 text-gray-400 flex items-center justify-center shadow-inner shrink-0">
+                        <ShieldAlert className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 stroke-[1.5]" />
                       </div>
                       <div className="min-w-0">
-                        <span className="font-sans text-[7.5px] min-[380px]:text-[8.5px] sm:text-[10px] font-bold text-gray-400 tracking-[0.1em] block uppercase truncate">Alternative</span>
-                        <h3 className="heading-condensed text-[10px] min-[380px]:text-[12px] sm:text-base text-[var(--color-heading)] leading-none mt-0.5 opacity-65 truncate">Whole Body Powder</h3>
+                        <span className="font-sans text-[6px] min-[380px]:text-[7.5px] sm:text-[9px] font-bold text-gray-400 tracking-[0.08em] block uppercase truncate">Alternative</span>
+                        <h3 className="heading-condensed text-[9.5px] min-[380px]:text-[11.5px] sm:text-base text-[var(--color-heading)] leading-none mt-0.5 opacity-65 truncate">Whole Body Powder</h3>
                       </div>
                     </div>
 
                     {/* Botanical Image - bigger! */}
-                    <div className="h-20 min-[380px]:h-26 sm:h-32 md:h-38 w-full rounded-xl overflow-hidden relative border border-gray-200/50 shadow-sm shrink-0">
+                    <div className="h-24 min-[380px]:h-32 sm:h-36 md:h-40 w-full rounded-xl overflow-hidden relative border border-gray-200/50 shadow-sm shrink-0">
                       <img 
                         src="/images/ashwagandha_plant.png" 
                         alt="Ashwagandha Leaves and Berries" 
@@ -310,38 +310,38 @@ export const Hero: React.FC = () => {
                         draggable="false"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute bottom-1.5 left-1.5 bg-red-500 text-white font-sans font-bold text-[7px] sm:text-[9px] tracking-[0.1em] uppercase px-2 py-0.5 rounded shadow-sm">
+                      <div className="absolute bottom-1 left-1 bg-red-500 text-white font-sans font-bold text-[6px] min-[380px]:text-[7.5px] sm:text-[9px] tracking-[0.08em] uppercase px-1.5 py-0.5 rounded shadow-sm">
                         Leaf & Stem Filler
                       </div>
                     </div>
 
                     {/* Features List */}
-                    <div className="flex-1 flex flex-col justify-center gap-2 sm:gap-3.5 mt-2 sm:mt-3">
+                    <div className="flex-1 flex flex-col justify-center gap-1.5 sm:gap-2.5 mt-1 sm:mt-2">
                       {[
                         {
                           title: "Elevated Cytotoxicity (Risk)",
-                          desc: "Whole plant inclusion spikes Withaferin A, presenting a toxicity risk at higher doses."
+                          desc: "Whole plant inclusion spikes Withaferin A, presenting a toxicity risk."
                         },
                         {
                           title: "Variable Effects (Whole Plant)",
-                          desc: "Inconsistent withanolide profile altering traditional root efficacy."
+                          desc: "Inconsistent profile; leaf compounds alter traditional root efficacy."
                         },
                         {
                           title: "Non-Traditional Use",
-                          desc: "Historically, leaves/stems were only used topically, not ingested internally."
+                          desc: "Historically, leaves were only used topically, not ingested internally."
                         },
                         {
                           title: "Diluted Active Ingredients",
-                          desc: "Often mixed with cheap whole plant fillers to artificially pad product weights."
+                          desc: "Often mixed with cheap plant fillers to pad bulk product weights."
                         }
                       ].map((item, idx) => (
-                        <div key={idx} className="flex gap-2 sm:gap-2.5 items-start">
-                          <div className="w-4 h-4 sm:w-5.5 sm:h-5.5 rounded-full bg-red-50 text-red-600 flex items-center justify-center shrink-0 mt-0.5">
-                            <X className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 stroke-[3]" />
+                        <div key={idx} className="flex gap-1.5 sm:gap-2 items-start">
+                          <div className="w-3 h-3 sm:w-4.5 sm:h-4.5 rounded-full bg-red-50 text-red-600 flex items-center justify-center shrink-0 mt-0.5">
+                            <X className="w-2 h-2 sm:w-3 sm:h-3 stroke-[3]" />
                           </div>
-                          <div className="flex flex-col min-w-0">
-                            <span className="font-sans text-[8.5px] min-[380px]:text-[10px] sm:text-xs md:text-sm font-bold text-[var(--color-heading)] opacity-80 leading-tight">{item.title}</span>
-                            <p className="font-sans text-[9px] md:text-[10.5px] text-[var(--color-text)] opacity-80 font-light leading-relaxed mt-0.5 hidden sm:block">{item.desc}</p>
+                          <div className="flex flex-col min-w-0 text-left">
+                            <span className="font-sans text-[7.5px] min-[380px]:text-[8.5px] sm:text-[10px] md:text-xs font-bold text-[var(--color-heading)] opacity-80 leading-tight">{item.title}</span>
+                            <p className="font-sans text-[6.5px] min-[380px]:text-[7.5px] sm:text-[9px] md:text-[10.5px] text-[var(--color-text)] opacity-75 font-light leading-snug mt-0.5 block">{item.desc}</p>
                           </div>
                         </div>
                       ))}
@@ -353,17 +353,17 @@ export const Hero: React.FC = () => {
               </div>
 
               {/* Bottom footer specs */}
-              <div className="w-full flex flex-col gap-1.5 shrink-0 hidden sm:flex">
-                <div className="self-center bg-[#E1ECF7] border border-[#C6D9EC] rounded-full px-4 py-0.5 shadow-sm">
-                  <span className="font-sans text-[7.5px] sm:text-[9.5px] font-extrabold tracking-wider uppercase text-gray-900">
+              <div className="w-full flex flex-col gap-1 shrink-0 mt-1 sm:mt-2">
+                <div className="self-center bg-[#E1ECF7] border border-[#C6D9EC] rounded-full px-3 py-0.5 shadow-sm">
+                  <span className="font-sans text-[6.5px] sm:text-[8px] font-extrabold tracking-wider uppercase text-gray-900">
                     KEY DIFFERENCES
                   </span>
                 </div>
-                <div className="grid grid-cols-4 gap-0.5 border-t border-gray-100 pt-1.5 text-[5px] min-[380px]:text-[6px] sm:text-[7.5px] md:text-[8px] font-extrabold uppercase text-gray-800 tracking-wider text-center leading-normal">
-                  <div className="border-r border-gray-200 pr-1 flex items-center justify-center">ACTIVE COMPOUNDS (e.g., Withaferin A)</div>
-                  <div className="border-r border-gray-200 px-1 flex items-center justify-center">PURITY & POTENCY</div>
-                  <div className="border-r border-gray-200 px-1 flex items-center justify-center">CLINICAL RESEARCH EVIDENCE</div>
-                  <div className="pl-1 flex items-center justify-center">SAFETY PROFILE</div>
+                <div className="grid grid-cols-4 gap-0.5 border-t border-gray-100 pt-1 text-[5px] min-[380px]:text-[6px] sm:text-[7.5px] md:text-[8px] font-extrabold uppercase text-gray-800 tracking-wider text-center leading-normal">
+                  <div className="border-r border-gray-200 pr-1 flex items-center justify-center">Active Compounds</div>
+                  <div className="border-r border-gray-200 px-1 flex items-center justify-center">Purity & Potency</div>
+                  <div className="border-r border-gray-200 px-1 flex items-center justify-center">Clinical Research</div>
+                  <div className="pl-1 flex items-center justify-center">Safety Profile</div>
                 </div>
               </div>
 
@@ -559,7 +559,7 @@ export const Hero: React.FC = () => {
 
         {/* RIGHT COLUMN: Interactive Product Carousel */}
         <div className="group order-1 lg:order-2 lg:col-span-6 flex justify-center lg:justify-end items-center relative py-8 lg:py-0 z-10">
-          <div className="relative w-full max-w-[460px] md:max-w-[500px] h-[460px] min-[380px]:h-[480px] md:h-auto md:aspect-square flex items-center justify-center overflow-visible">
+          <div className="relative w-full max-w-[460px] md:max-w-[500px] h-[540px] min-[380px]:h-[580px] md:h-auto md:aspect-square flex items-center justify-center overflow-visible">
             
             {/* Carousel Container (Static on hover, swipeable on touch/drag) */}
             <motion.div
