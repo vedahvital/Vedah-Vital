@@ -198,7 +198,7 @@ export const Hero: React.FC = () => {
               {/* Header Title */}
               <div className="w-full text-center pb-1.5 border-b border-gray-100 shrink-0">
                 <h3 className="font-sans text-[11px] sm:text-xs md:text-sm font-extrabold tracking-wide uppercase text-gray-900">
-                  KSM-66 ASHWAGANDHA: Root vs. Leaf
+                  KSM-66 ASHWAGANDHA: Root vs. Whole Plant
                 </h3>
               </div>
 
@@ -320,19 +320,19 @@ export const Hero: React.FC = () => {
                       {[
                         {
                           title: "Elevated Cytotoxicity (Risk)",
-                          desc: "Leaf/stem inclusion spikes Withaferin A, presenting a toxicity risk at higher doses."
+                          desc: "Whole plant inclusion spikes Withaferin A, presenting a toxicity risk at higher doses."
                         },
                         {
-                          title: "Variable Effects (Leaf)",
+                          title: "Variable Effects (Whole Plant)",
                           desc: "Inconsistent withanolide profile altering traditional root efficacy."
                         },
                         {
                           title: "Non-Traditional Use",
-                          desc: "Historically, leaves were only used topically, not ingested internally."
+                          desc: "Historically, leaves/stems were only used topically, not ingested internally."
                         },
                         {
                           title: "Diluted Active Ingredients",
-                          desc: "Often mixed with cheap leaf fillers to artificially pad product weights."
+                          desc: "Often mixed with cheap whole plant fillers to artificially pad product weights."
                         }
                       ].map((item, idx) => (
                         <div key={idx} className="flex gap-1.5 sm:gap-2 items-start">
