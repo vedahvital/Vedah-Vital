@@ -1,38 +1,12 @@
-{
-  "cleanUrls": true,
-  "headers": [
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/images/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=86400, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "/image/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=86400, must-revalidate"
-        }
-      ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
+﻿{"$schema": "https://openapi.vercel.sh/vercel.json",
+ "cleanUrls": false,
+ "trailingSlash": false,
+ "headers": [
+   {"source": "/assets/(.*)", "headers": [{"key": "Cache-Control", "value": "public, max-age=31536000, immutable"}]},
+   {"source": "/images/(.*)", "headers": [{"key": "Cache-Control", "value": "public, max-age=86400, must-revalidate"}]},
+   {"source": "/image/(.*)",  "headers": [{"key": "Cache-Control", "value": "public, max-age=86400, must-revalidate"}]}
+ ],
+ "rewrites": [
+   {"source": "/((?!assets/|images/|image/).*)", "destination": "/index.html"}
+ ]
 }
