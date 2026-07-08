@@ -11,7 +11,7 @@
       ]
     },
     {
-      "source": "/image/(.*)",
+      "source": "/images/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -20,7 +20,7 @@
       ]
     },
     {
-      "source": "/images/(.*)",
+      "source": "/image/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -31,15 +31,7 @@
   ],
   "rewrites": [
     {
-      "source": "/assets/:path*",
-      "destination": "/assets/:path*"
-    },
-    {
-      "source": "/images/:path*",
-      "destination": "/images/:path*"
-    },
-    {
-      "source": "/:path*",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]

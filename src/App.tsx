@@ -1,11 +1,27 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 
-const Home = lazy(() => import('./pages/Home'))
-const About = lazy(() => import('./pages/About'))
-const Contact = lazy(() => import('./pages/Contact'))
-const Verify = lazy(() => import('./pages/Verify'))
+// Retry chunk load on failure (common on new deployments)
+const lazyWithRetry = (componentImport: () => Promise<any>) => {
+  return lazy(() =>
+    componentImport().catch((error) => {
+      console.error("Chunk load failed:", error);
+      const hasReloaded = window.sessionStorage.getItem('chunk-reload');
+      if (!hasReloaded) {
+        window.sessionStorage.setItem('chunk-reload', 'true');
+        window.location.reload();
+        return new Promise(() => {});
+      }
+      throw error;
+    })
+  );
+};
+
+const Home = lazyWithRetry(() => import('./pages/Home'))
+const About = lazyWithRetry(() => import('./pages/About'))
+const Contact = lazyWithRetry(() => import('./pages/Contact'))
+const Verify = lazyWithRetry(() => import('./pages/Verify'))
 
 // Scroll restoration helper
 const ScrollToTop = () => {
@@ -28,6 +44,11 @@ const LoadingFallback = () => (
 )
 
 function App() {
+  // Clear chunk reload flag after successful load
+  useEffect(() => {
+    window.sessionStorage.removeItem('chunk-reload');
+  }, []);
+
   return (
     <>
       <ScrollToTop />
@@ -42,6 +63,8 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/verify" element={<Verify />} />
+          {/* Fallback wildcard redirect to safe route home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     </>
