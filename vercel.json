@@ -31,7 +31,15 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!assets|images|favicon.svg|robots.txt|sitemap.xml).*)",
+      "source": "/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/images/:path*",
+      "destination": "/images/:path*"
+    },
+    {
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ]
