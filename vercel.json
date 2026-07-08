@@ -7,6 +7,6 @@
    {"source": "/image/(.*)",  "headers": [{"key": "Cache-Control", "value": "public, max-age=86400, must-revalidate"}]}
  ],
  "rewrites": [
-   {"source": "/((?!assets/|images/|image/).*)", "destination": "/index.html"}
+   {"source": "/(.*)", "destination": "/index.html"}
  ]
 }
