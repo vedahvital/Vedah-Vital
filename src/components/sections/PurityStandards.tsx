@@ -283,7 +283,7 @@ export const PurityStandards: React.FC = () => {
                 <AnimatedSection
                   key={g.title}
                   delay={idx * 0.15}
-                  className="flex flex-col items-stretch p-6 rounded-3xl border border-[rgba(10,25,47,0.12)] bg-white/50 backdrop-blur-md shadow-sm hover:shadow-md hover:scale-[1.02] hover:bg-white/70 transition-all duration-300 group text-left"
+                  className="flex flex-col items-stretch p-6 min-h-[20rem] rounded-3xl border border-[rgba(10,25,47,0.12)] bg-white/50 backdrop-blur-md shadow-sm hover:shadow-md hover:scale-[1.02] hover:bg-white/70 transition-all duration-300 group text-left"
                 >
                   {/* Top Illustration Wrapper (Fills top of the card) */}
                   <div className="h-36 w-full flex items-center justify-center bg-[var(--color-navy-light)] rounded-2xl shadow-inner mb-5 relative overflow-hidden">

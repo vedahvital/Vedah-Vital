@@ -33,7 +33,7 @@ export const Testimonials: React.FC = () => {
             <h2 className="heading-condensed text-4xl md:text-5xl text-[var(--color-heading)] tracking-wide">
               real results
             </h2>
-            <h3 className="heading-condensed text-2xl md:text-3.5xl text-[var(--color-navy)] tracking-wide -mt-2">
+            <h3 className="heading-condensed text-2xl md:text-3.5xl text-[var(--color-navy)] tracking-wide mt-4">
               from real routines
             </h3>
           </div>

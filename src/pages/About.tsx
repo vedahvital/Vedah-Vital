@@ -42,7 +42,7 @@ export const About: React.FC = () => {
         <section className="py-20 md:py-28 relative overflow-clip border-b border-[rgba(10, 25, 47,0.15)]">
                     <div className="max-w-[var(--max-width)] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-            <AnimatedSection className="flex flex-col gap-6 text-left border-l border-[rgba(10, 25, 47,0.15)] pl-6 md:pl-10 py-4">
+            <AnimatedSection className="flex flex-col gap-6 text-left border-l border-[rgba(10, 25, 47,0.15)] pl-6 md:pl-10 py-4 lg:col-span-2">
               <h2 className="heading-condensed text-4xl md:text-5xl text-[var(--color-heading)] tracking-wide">
                 the soul of vedah vital
               </h2>

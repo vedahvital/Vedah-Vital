@@ -31,7 +31,7 @@ export const FinalCTA: React.FC = () => {
               <h2 className="heading-condensed text-5xl md:text-7xl text-[var(--color-heading)] tracking-wide">
                 your daily ritual
               </h2>
-              <h3 className="heading-condensed text-3xl md:text-5xl text-[var(--color-navy)] tracking-wide -mt-2">
+              <h3 className="heading-condensed text-3xl md:text-5xl text-[var(--color-navy)] tracking-wide mt-4">
                 starts here
             </h3>
             </div>
@@ -61,10 +61,6 @@ export const FinalCTA: React.FC = () => {
               {/* Soft inner plate backdrop */}
               <div className="absolute inset-4 rounded-full bg-[var(--color-navy-light)] border border-dashed border-[rgba(10, 25, 47,0.15)] overflow-hidden flex items-center justify-center">
                 
-                {/* Stone Pedestal graphic */}
-                <div className="absolute bottom-6 w-[80%] h-16 bg-white border border-[var(--border-navy-ghost)] shadow-sm flex items-center justify-center text-[7px] font-sans font-bold tracking-widest text-[var(--color-navy)] uppercase">
-                  vedah vital apothecary
-                </div>
 
               </div>
 

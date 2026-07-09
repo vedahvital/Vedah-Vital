@@ -85,10 +85,6 @@ export const FAQ: React.FC = () => {
   return (
     <section className="bg-white text-[var(--color-text)] py-14 md:py-18 relative overflow-clip border-b border-[rgba(10, 25, 47,0.15)]">
       
-      {/* Background watermark */}
-      <div className="absolute right-[-5%] top-[10%] opacity-30 pointer-events-none select-none">
-        <span className="text-watermark">vedah vital</span>
-      </div>
 
       <div className="max-w-3xl mx-auto px-6 md:px-12 relative z-10">
         
