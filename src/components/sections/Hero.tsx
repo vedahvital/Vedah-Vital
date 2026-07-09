@@ -11,6 +11,8 @@ export const Hero: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isEnlarged, setIsEnlarged] = useState(false);
+  // Track whether a drag gesture is currently active to avoid opening the modal on swipe
+  const [isDragging, setIsDragging] = useState(false);
 
   const resetTimer = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -551,6 +553,7 @@ export const Hero: React.FC = () => {
             
             {/* Carousel Container (Static on hover, swipeable on touch/drag) */}
             <motion.div
+              data-testid="hero-carousel"
               style={{ y: yBottle }}
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -558,7 +561,10 @@ export const Hero: React.FC = () => {
               className="relative w-full h-full flex items-center justify-center overflow-visible touch-pan-y cursor-grab active:cursor-grabbing"
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.2}
+              // Increase drag elasticity for smoother touch swipes
+              dragElastic={0.4}
+              // Track dragging state to differentiate tap vs swipe
+              onDragStart={() => setIsDragging(true)}
               onDragEnd={(_event, info) => {
                 const threshold = 50; // Swipe threshold in pixels
                 if (info.offset.x < -threshold) {
@@ -566,9 +572,19 @@ export const Hero: React.FC = () => {
                 } else if (info.offset.x > threshold) {
                   prevSlide();
                 }
+                // Reset dragging flag after handling swipe
+                setIsDragging(false);
               }}
               onTap={() => {
-                if (!isEnlarged) {
+                // Only open modal if a drag gesture was not in progress
+                if (!isEnlarged && !isDragging) {
+                  setIsEnlarged(true);
+                  setIsPlaying(false);
+                }
+              }}
+              // Add native click handler for testing environments where onTap may not fire
+              onClick={() => {
+                if (!isEnlarged && !isDragging) {
                   setIsEnlarged(true);
                   setIsPlaying(false);
                 }
@@ -622,6 +638,9 @@ export const Hero: React.FC = () => {
       <AnimatePresence>
         {isEnlarged && (
           <motion.div
+            // Modal overlay – accessible dialog role for testing and screen readers
+            role="dialog"
+            aria-modal="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -636,8 +655,9 @@ export const Hero: React.FC = () => {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-[500px] h-[520px] sm:h-[580px] md:h-[600px] cursor-default"
+              // Softer spring for faster, smoother zoom‑in on mobile
+              transition={{ type: "spring", damping: 30, stiffness: 200 }}
+              className="relative w-full max-w-[500px] h-[520px] sm:h-[580px] md:h-[600px] cursor-default will-change-transform"
               onClick={(e) => e.stopPropagation()} // Prevent closing when clicking card itself
             >
               {/* Close Button */}

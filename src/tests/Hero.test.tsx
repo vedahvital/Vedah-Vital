@@ -44,4 +44,19 @@ describe('Hero carousel', () => {
     act(() => { vi.advanceTimersByTime(4900); });
     expect(screen.getByText(/Active Ingredients/i)).toBeInTheDocument();
   });
+
+  it('dragging does not open the enlarged modal, but clicking does', () => {
+    render(<Hero />);
+    const carousel = screen.getByTestId('hero-carousel');
+    // Simulate drag: mouse down, move > 50px, mouse up
+    fireEvent.mouseDown(carousel, { clientX: 100, clientY: 0 });
+    fireEvent.mouseMove(carousel, { clientX: 30, clientY: 0 }); // 70px left drag
+    fireEvent.mouseUp(carousel);
+    // Modal should not be present
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    // Now simulate a simple click (no drag)
+    fireEvent.click(carousel);
+    // Modal should appear
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
 });
