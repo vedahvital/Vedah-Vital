@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { LAB_REPORTS, type LabTestReport } from '../lib/mockData';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE_URL = rawBaseUrl
+  ? rawBaseUrl.endsWith('/api/public')
+    ? rawBaseUrl
+    : `${rawBaseUrl.replace(/\/$/, '')}/api/public`
+  : '';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -55,8 +60,9 @@ export const submitContactForm = async (payload: ContactPayload): Promise<{ succ
   }
 
   try {
-    const response = await apiClient.post<{ success: boolean; message: string }>('/contact', payload);
-    return { success: response.data.success, message: response.data.message };
+    const response = await apiClient.post<{ ok?: boolean; success?: boolean; message?: string }>('/contact', payload);
+    const isSuccess = response.data?.ok === true || response.data?.success === true;
+    return { success: isSuccess, message: response.data?.message || 'Message sent successfully!' };
   } catch (error) {
     console.error('[Vedah API] Contact submission error:', error);
     // Return graceful response so UI displays fallback error message
@@ -77,8 +83,9 @@ export const subscribeNewsletter = async (email: string): Promise<{ success: boo
   }
 
   try {
-    const response = await apiClient.post<{ success: boolean; message: string }>('/subscribe', { email: cleanEmail });
-    return { success: response.data.success, message: response.data.message || 'Subscribed successfully!' };
+    const response = await apiClient.post<{ ok?: boolean; success?: boolean; message?: string }>('/subscribe', { email: cleanEmail });
+    const isSuccess = response.data?.ok === true || response.data?.success === true;
+    return { success: isSuccess, message: response.data?.message || 'Subscribed successfully!' };
   } catch (error) {
     console.error('[Vedah API] Newsletter subscription error:', error);
     return { success: false, message: 'Unable to subscribe right now. Please try again.' };
