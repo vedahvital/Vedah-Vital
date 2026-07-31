@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import InstagramIcon from '../ui/icons/instagram-icon';
 import SendIcon from '../ui/icons/send-icon';
 import MailFilledIcon from '../ui/icons/mail-filled-icon';
+import { useNewsletterSubscribe } from '../../hooks/useNewsletter';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const [subscribedMsg, setSubscribedMsg] = useState<string | null>(null);
+  const subscribeMutation = useNewsletterSubscribe();
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    subscribeMutation.mutate(email, {
+      onSuccess: (res) => {
+        setSubscribedMsg(res.message);
+        setEmail('');
+      },
+    });
+  };
 
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -37,19 +53,32 @@ export const Footer: React.FC = () => {
           <span className="font-sans text-[10px] font-bold uppercase tracking-widest text-white/70">
             SUBSCRIBE FOR BATCH RELEASES
           </span>
-          <form 
-            onSubmit={(e) => e.preventDefault()}
-            className="flex items-center justify-between border-b border-white/30 py-2 w-full max-w-sm"
-          >
-            <input 
-              type="email" 
-              placeholder="Enter your email" 
-              className="bg-transparent border-0 focus:outline-none font-sans text-sm text-white placeholder-white/50 w-full pr-4"
-            />
-            <button className="text-white hover:text-white/80 cursor-pointer w-10 h-10 flex items-center justify-center shrink-0">
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </form>
+          {subscribedMsg ? (
+            <div className="py-2.5 px-4 bg-white/10 border border-white/20 rounded-xl font-sans text-xs text-white/90">
+              {subscribedMsg}
+            </div>
+          ) : (
+            <form 
+              onSubmit={handleSubscribe}
+              className="flex items-center justify-between border-b border-white/30 py-2 w-full max-w-sm"
+            >
+              <input 
+                type="email" 
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email" 
+                className="bg-transparent border-0 focus:outline-none font-sans text-sm text-white placeholder-white/50 w-full pr-4"
+              />
+              <button 
+                type="submit" 
+                disabled={subscribeMutation.isPending}
+                className="text-white hover:text-white/80 cursor-pointer w-10 h-10 flex items-center justify-center shrink-0 disabled:opacity-50"
+              >
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </form>
+          )}
           <p className="font-sans text-xs text-white/60 leading-relaxed max-w-xs">
             Sign up to get notified of new laboratory certificate releases, batch audits, and adaptogen chemistry updates.
           </p>

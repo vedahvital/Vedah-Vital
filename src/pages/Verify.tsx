@@ -8,10 +8,10 @@ import { Button } from '../components/ui/Button';
 import { LAB_REPORTS, type LabTestReport } from '../lib/mockData';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 
-export const Verify: React.FC = () => {
-  // Validates batch code format: VV-XXX(X)-YYYY-ZZZ
-  const BATCH_CODE_REGEX = /^VV-[A-Z]{3,4}-\d{4}-\d{3}$/;
+import { useBatchVerification } from '../hooks/useBatchVerification';
+import { validateBatchCodeFormat } from '../lib/qrUtils';
 
+export const Verify: React.FC = () => {
   const [code, setCode] = useState(() => {
     if (typeof window === 'undefined') return '';
     const params = new URLSearchParams(window.location.search);
@@ -20,10 +20,11 @@ export const Verify: React.FC = () => {
     if (sourceParam === 'qr' && batchParam) {
       const trimmed = batchParam.trim().toUpperCase();
       // Guard against malformed QR scans
-      return BATCH_CODE_REGEX.test(trimmed) ? trimmed : '';
+      return validateBatchCodeFormat(trimmed) ? trimmed : '';
     }
     return '';
   });
+  const [searchCode, setSearchCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<LabTestReport | null>(() => {
     if (typeof window === 'undefined') return null;
@@ -48,6 +49,22 @@ export const Verify: React.FC = () => {
     }
     return false;
   });
+
+  const { data: fetchedReport, isFetched } = useBatchVerification(searchCode, hasSearched);
+
+  useEffect(() => {
+    if (hasSearched && isFetched) {
+      setLoading(false);
+      if (fetchedReport) {
+        setReport(fetchedReport);
+        setError(null);
+      } else {
+        setReport(null);
+        setError('Batch code not found. Please double-check the code printed near the barcode on your bottle (e.g. VV-ASH-2026-001).');
+      }
+    }
+  }, [hasSearched, isFetched, fetchedReport]);
+
   const [showScanner, setShowScanner] = useState(false);
   const [qrModalStatus, setQrModalStatus] = useState<'genuine' | 'fake' | null>(() => {
     if (typeof window === 'undefined') return null;
@@ -92,17 +109,8 @@ export const Verify: React.FC = () => {
     setLoading(true);
     setError(null);
     setReport(null);
+    setSearchCode(query);
     setHasSearched(true);
-
-    setTimeout(() => {
-      setLoading(false);
-      const foundReport = LAB_REPORTS[query];
-      if (foundReport) {
-        setReport(foundReport);
-      } else {
-        setError('Batch code not found. Please double-check the code printed near the barcode on your bottle (e.g. VV-ASH-2026-001).');
-      }
-    }, 1500);
   };
 
   return (

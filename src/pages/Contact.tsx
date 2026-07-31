@@ -17,20 +17,25 @@ const contactDetails = [
   },
 ];
 
+import { useContactForm } from '../hooks/useContactForm';
+
 export const Contact: React.FC = () => {
   const [formData, setFormData] = useState({ name: '', email: '', batchCode: '', message: '' });
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const contactMutation = useContactForm();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormData({ name: '', email: '', batchCode: '', message: '' });
-    }, 1500);
+
+    contactMutation.mutate(formData, {
+      onSuccess: (res) => {
+        if (res.success) {
+          setIsSubmitted(true);
+          setFormData({ name: '', email: '', batchCode: '', message: '' });
+        }
+      },
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -184,10 +189,10 @@ export const Contact: React.FC = () => {
                       <Button
                         type="submit"
                         variant="primary"
-                        disabled={isSubmitting}
+                        disabled={contactMutation.isPending}
                         className="mt-2 w-full sm:w-auto self-start"
                       >
-                        {isSubmitting ? (
+                        {contactMutation.isPending ? (
                           <span>Sending message...</span>
                         ) : (
                           <>

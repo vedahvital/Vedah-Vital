@@ -167,7 +167,7 @@ export const Hero: React.FC = () => {
                   <div className="flex flex-col flex-1 justify-center ml-3.5 md:ml-0 md:mt-2">
                     <div>
                       <span className="font-sans text-[12px] sm:text-[13px] md:text-sm font-bold text-[var(--color-heading)] leading-tight block">KSM-66® Ashwagandha</span>
-                      <span className="font-sans text-[9.5px] sm:text-[10.5px] md:text-[11px] text-[var(--color-navy)] font-bold tracking-wider uppercase mt-0.5 block">600mg Dose</span>
+                      <span className="font-sans text-[9.5px] sm:text-[10.5px] md:text-[11px] text-[var(--color-navy)] font-bold tracking-wider uppercase mt-0.5 block">500 mg Dose</span>
                       <p className="font-sans text-[10px] min-[380px]:text-[10.5px] sm:text-[11.5px] md:text-[12px] text-[var(--color-text)] font-light leading-snug mt-1">
                         Clinically proven KSM-66® root extract, standardized to 5% active withanolides. Supports cortisol balance, cognitive focus, and muscle recovery.
                       </p>
