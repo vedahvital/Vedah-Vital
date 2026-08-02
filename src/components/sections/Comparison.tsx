@@ -36,7 +36,7 @@ const WholeBodyImage = () => (
 
 export const Comparison: React.FC = () => {
   return (
-    <section className="bg-gradient-to-b from-white via-[#FAFBFD] to-white text-[var(--color-text)] py-20 md:py-28 relative overflow-clip border-b border-[rgba(10,25,47,0.1)] z-10">
+    <section id="comparison" className="bg-gradient-to-b from-white via-[#FAFBFD] to-white text-[var(--color-text)] py-20 md:py-28 relative overflow-clip border-b border-[rgba(10,25,47,0.1)] z-10">
       
       {/* Background Architectural Grid Overlay */}
       <div className="absolute inset-0 grid grid-cols-6 grid-rows-6 opacity-[0.015] pointer-events-none">

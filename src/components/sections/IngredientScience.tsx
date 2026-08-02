@@ -7,7 +7,7 @@ import { IngredientInfographic } from '../ui/IngredientInfographic';
 
 export const IngredientScience: React.FC = () => {
   return (
-    <section className="bg-[var(--color-navy)] text-white py-20 md:py-28 relative overflow-clip border-b border-[rgba(10, 25, 47,0.15)] z-10">
+    <section id="ingredients" className="bg-[var(--color-navy)] text-white py-20 md:py-28 relative overflow-clip border-b border-[rgba(10, 25, 47,0.15)] z-10">
       
       {/* Background watermark - subtle white */}
       <div className="absolute left-[-5%] top-[10%] text-white opacity-10 pointer-events-none select-none">

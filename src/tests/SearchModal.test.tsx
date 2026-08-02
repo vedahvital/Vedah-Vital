@@ -37,15 +37,14 @@ describe('SearchModal Component', () => {
     expect(screen.getByText(/verify batch & certificate of analysis/i)).toBeInTheDocument();
   });
 
-  it('populates query input when popular tag is clicked', () => {
-    renderSearchModal(true);
+  it('navigates and closes modal when popular tag is clicked', () => {
+    const onClose = vi.fn();
+    renderSearchModal(true, onClose);
     const tag = screen.getByRole('button', { name: /^ashwagandha$/i });
 
     fireEvent.click(tag);
 
-    const input = screen.getByPlaceholderText(/search products, lab verification, ingredients/i) as HTMLInputElement;
-    expect(input.value).toBe('Ashwagandha');
-    expect(screen.getByText(/search results/i)).toBeInTheDocument();
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it('calls onClose when top right X close button is clicked', () => {

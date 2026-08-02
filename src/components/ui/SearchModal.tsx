@@ -22,7 +22,7 @@ const SEARCH_ITEMS: SearchItem[] = [
     category: 'Product',
     path: '/',
     icon: <Leaf className="w-4 h-4 text-emerald-600" />,
-    tags: ['ashwagandha', 'ksm66', 'root', 'extract', 'withanolides', 'bioperine', 'supplement', 'capsules']
+    tags: ['ashwagandha', 'ksm66', 'root', 'extract', 'withanolides', 'bioperine', 'supplement', 'capsules', 'organic']
   },
   {
     id: 'verify-batch',
@@ -32,6 +32,15 @@ const SEARCH_ITEMS: SearchItem[] = [
     path: '/verify',
     icon: <ShieldCheck className="w-4 h-4 text-[var(--color-navy)]" />,
     tags: ['verify', 'verification', 'batch', 'coa', 'lab', 'report', 'testing', 'authenticity', 'certificate', 'code']
+  },
+  {
+    id: 'science-withaferin',
+    title: 'Withaferin A Difference & Root Purity',
+    description: 'Why root-only extraction avoids high leaf Withaferin A cytotoxicity for safety.',
+    category: 'Science',
+    path: '/#comparison',
+    icon: <FileText className="w-4 h-4 text-purple-600" />,
+    tags: ['withaferin', 'withanolides', 'potency', 'comparison', 'safety', 'root', 'leaf', 'toxicity']
   },
   {
     id: 'about-story',
@@ -44,7 +53,7 @@ const SEARCH_ITEMS: SearchItem[] = [
   },
   {
     id: 'contact-support',
-    title: 'Contact Support & Inquiries',
+    title: 'Contact Support & Care Team',
     description: 'Reach out to our customer care team for orders, questions, or medical inquiries.',
     category: 'Support',
     path: '/contact',
@@ -52,13 +61,13 @@ const SEARCH_ITEMS: SearchItem[] = [
     tags: ['contact', 'support', 'help', 'email', 'phone', 'customer care', 'faq']
   },
   {
-    id: 'science-withanolides',
-    title: '5% Withanolides Bioactive Potency',
-    description: 'Learn why root-only extraction yields high-concentration active adaptogens.',
+    id: 'science-ingredients',
+    title: 'Ingredients & BioPerine® Absorption',
+    description: 'Black pepper extract synergy boosting active compound bioavailability.',
     category: 'Science',
-    path: '/about',
-    icon: <FileText className="w-4 h-4 text-purple-600" />,
-    tags: ['withanolides', 'potency', 'bioactive', 'adaptogen', 'stress', 'cortisol', 'science']
+    path: '/#ingredients',
+    icon: <Leaf className="w-4 h-4 text-emerald-600" />,
+    tags: ['ingredients', 'bioperine', 'black pepper', 'absorption', 'synergy', 'formulation']
   },
   {
     id: 'verify-cgmp',
@@ -71,7 +80,14 @@ const SEARCH_ITEMS: SearchItem[] = [
   }
 ];
 
-const POPULAR_TAGS = ['Ashwagandha', 'Verify Batch', 'Lab Results', 'Withanolides', 'Contact Us'];
+const POPULAR_TAGS = [
+  { label: 'Ashwagandha', path: '/', query: 'ashwagandha' },
+  { label: 'Verify Batch', path: '/verify', query: 'verify' },
+  { label: 'Lab Results', path: '/verify', query: 'lab' },
+  { label: 'Withanolides', path: '/#comparison', query: 'withanolides' },
+  { label: 'Contact Us', path: '/contact', query: 'contact' },
+  { label: 'Our Standards', path: '/about', query: 'standards' }
+];
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -97,6 +113,23 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
     };
   }, [isOpen]);
 
+  const handleSelect = (path: string) => {
+    onClose();
+    if (path.includes('#')) {
+      const [targetPath, hash] = path.split('#');
+      const route = targetPath || '/';
+      navigate(route);
+      setTimeout(() => {
+        const element = document.getElementById(hash) || document.querySelector(`#${hash}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 150);
+    } else {
+      navigate(path);
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
@@ -119,9 +152,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
         );
       });
 
-  const handleSelect = (path: string) => {
-    onClose();
-    navigate(path);
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && filteredItems.length > 0) {
+      handleSelect(filteredItems[0].path);
+    }
   };
 
   return (
@@ -161,6 +195,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleInputKeyDown}
                 placeholder="Search products, lab verification, ingredients..."
                 className="w-full bg-transparent font-sans text-base text-[var(--color-heading)] placeholder:text-gray-400 focus:outline-none"
               />
@@ -195,11 +230,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                   <div className="flex flex-wrap gap-2 mb-6">
                     {POPULAR_TAGS.map((tag) => (
                       <button
-                        key={tag}
-                        onClick={() => setQuery(tag)}
-                        className="font-sans text-xs font-medium text-[var(--color-navy)] bg-[var(--color-navy-light)] hover:bg-[var(--color-navy)] hover:text-white transition-colors px-3 py-1.5 rounded-full cursor-pointer"
+                        key={tag.label}
+                        onClick={() => handleSelect(tag.path)}
+                        className="font-sans text-xs font-medium text-[var(--color-navy)] bg-[var(--color-navy-light)] hover:bg-[var(--color-navy)] hover:text-white transition-colors px-3 py-1.5 rounded-full cursor-pointer flex items-center gap-1.5 group"
                       >
-                        {tag}
+                        <span>{tag.label}</span>
+                        <ArrowRight className="w-3 h-3 text-[var(--color-navy)] group-hover:text-white transition-colors opacity-70" />
                       </button>
                     ))}
                   </div>
