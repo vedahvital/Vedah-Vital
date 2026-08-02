@@ -5,10 +5,12 @@ import { Menu, X, ShoppingBag, User } from 'lucide-react';
 import { Button } from '../ui/Button';
 import MagnifierIcon from '../ui/icons/magnifier-icon';
 import ShieldCheckIcon from '../ui/icons/shield-check';
+import SearchModal from '../ui/SearchModal';
 
 export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,13 +89,17 @@ export const Navbar: React.FC = () => {
           {/* Desktop Utility Icons & Verification CTA */}
           <div className="hidden md:flex items-center gap-6">
             <div className="flex items-center gap-5 text-[var(--color-text)] mr-2">
-              <button className="hover:text-[var(--color-navy)] transition-colors cursor-pointer flex items-center">
+              <button 
+                onClick={() => setIsSearchOpen(true)} 
+                className="hover:text-[var(--color-navy)] transition-colors cursor-pointer flex items-center p-1.5 rounded-full hover:bg-gray-100/60"
+                aria-label="Search site"
+              >
                 <MagnifierIcon size={16} color="currentColor" strokeWidth={2.25} />
               </button>
-              <button className="hover:text-[var(--color-navy)] transition-colors cursor-pointer">
+              <button className="hover:text-[var(--color-navy)] transition-colors cursor-pointer p-1.5 rounded-full hover:bg-gray-100/60" aria-label="Account">
                 <User className="w-4 h-4 stroke-[2]" />
               </button>
-              <button className="hover:text-[var(--color-navy)] transition-colors cursor-pointer relative">
+              <button className="hover:text-[var(--color-navy)] transition-colors cursor-pointer relative p-1.5 rounded-full hover:bg-gray-100/60" aria-label="Cart">
                 <ShoppingBag className="w-4 h-4 stroke-[2]" />
               </button>
             </div>
@@ -106,15 +112,24 @@ export const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Mobile Menu Toggle — 44×44px WCAG 2.5.5 compliant tap target */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden w-11 h-11 flex items-center justify-center text-[var(--color-heading)] hover:text-[var(--color-navy)] transition-colors focus:outline-none rounded-lg -mr-2"
-            aria-label="Toggle Menu"
-            aria-expanded={isMobileMenuOpen}
-          >
-            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Mobile Search & Menu Toggle */}
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="w-10 h-10 flex items-center justify-center text-[var(--color-heading)] hover:text-[var(--color-navy)] transition-colors focus:outline-none rounded-lg"
+              aria-label="Search site"
+            >
+              <MagnifierIcon size={18} color="currentColor" strokeWidth={2.25} />
+            </button>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="w-10 h-10 flex items-center justify-center text-[var(--color-heading)] hover:text-[var(--color-navy)] transition-colors focus:outline-none rounded-lg"
+              aria-label="Toggle Menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -130,6 +145,16 @@ export const Navbar: React.FC = () => {
           >
             {/* Nav List */}
             <nav className="flex flex-col gap-6">
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsSearchOpen(true);
+                }}
+                className="flex items-center gap-3 font-display text-lg font-bold tracking-widest border-b border-[rgba(10, 25, 47,0.1)] pb-3 text-[var(--color-heading)] uppercase text-left hover:text-[var(--color-navy)] transition-colors cursor-pointer"
+              >
+                <MagnifierIcon size={18} color="var(--color-navy)" strokeWidth={2.25} />
+                Search Site
+              </button>
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
@@ -162,6 +187,9 @@ export const Navbar: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Global Search Modal */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
 };
