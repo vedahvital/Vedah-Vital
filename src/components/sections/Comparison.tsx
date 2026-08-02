@@ -273,7 +273,7 @@ export const Comparison: React.FC = () => {
                 </div>
 
                 {/* Footnote */}
-                <p className="text-[11px] sm:text-[12px] md:text-[13px] font-sans text-gray-400 text-left leading-normal italic">
+                <p className="text-[11px] sm:text-[12px] md:text-[13px] font-sans text-slate-700 font-medium text-left leading-normal italic">
                   *Note: Whole body powder is often high in toxic Withaferin A due to leaf/stem content; KSM-66 is root-only and controlled.
                 </p>
               </div>
