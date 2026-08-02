@@ -66,7 +66,7 @@ export const FinalCTA: React.FC = () => {
 
               {/* Product Bottle floating above pedestal */}
               <motion.img
-                src="/images/isolated_bottle.webp"
+                src="/images/isolated_bottle_New.png"
                 alt="Vedah Vital Ashwagandha Bottle"
                 className="w-[50%] h-auto object-contain select-none filter drop-shadow-[0_20px_35px_rgba(10, 25, 47,0.15)] animate-float z-10"
                 draggable="false"

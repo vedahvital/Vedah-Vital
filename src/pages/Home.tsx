@@ -51,7 +51,7 @@ export const Home: React.FC = () => {
     "@type": "Product",
     "name": "Vedah Vital Organic KSM-66 Ashwagandha",
     "image": [
-      "https://vedahvital.com/images/isolated_bottle.webp"
+      "https://vedahvital.com/images/isolated_bottle_New.png"
     ],
     "description": "Premium organic KSM-66 Ashwagandha Root Extract standardized to 5% withanolides. Combined with black pepper extract for maximum absorption. Medically reviewed. *These statements have not been evaluated by the FDA.",
     "sku": "VV-ASH-600",

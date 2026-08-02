@@ -99,7 +99,7 @@ export const Hero: React.FC = () => {
 
             {/* Isolated product bottle image */}
             <img
-              src="/images/isolated_bottle.webp"
+              src="/images/isolated_bottle_New.png"
               alt="Vedah Vital Ashwagandha Bottle"
               className="w-[65%] h-auto object-contain select-none filter drop-shadow-[0_30px_45px_rgba(10,25,47,0.22)] z-10"
               draggable="false"
@@ -124,7 +124,7 @@ export const Hero: React.FC = () => {
               
               <div className="flex-1 w-full flex items-center justify-center overflow-hidden my-2 sm:my-2.5">
                 <img 
-                  src="/images/supplement_facts.webp" 
+                  src="/images/supplement_facts_New.png" 
                   alt="Supplement Facts Label" 
                   className="max-w-full max-h-full object-contain rounded-lg filter drop-shadow-md select-none"
                   draggable="false"
