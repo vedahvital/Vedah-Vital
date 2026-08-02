@@ -127,19 +127,24 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-16 sm:pt-24 px-4">
+        <div 
+          className="fixed inset-0 z-[100] flex items-start justify-center pt-16 sm:pt-24 px-4"
+          onClick={onClose}
+          onTouchEnd={onClose}
+        >
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={onClose}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm"
           />
 
           {/* Modal Container */}
           <motion.div
+            onClick={(e) => e.stopPropagation()}
+            onTouchEnd={(e) => e.stopPropagation()}
             initial={{ opacity: 0, scale: 0.96, y: -15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -15 }}
@@ -148,7 +153,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
           >
             {/* Input Bar */}
             <div className="relative flex items-center px-5 py-4 border-b border-gray-100 bg-gray-50/50">
-              <div className="text-gray-400 mr-3.5 flex items-center">
+              <div className="text-gray-400 mr-3.5 flex items-center shrink-0">
                 <MagnifierIcon size={20} color="currentColor" strokeWidth={2.2} />
               </div>
               <input
@@ -162,17 +167,21 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
               {query && (
                 <button
                   onClick={() => setQuery('')}
-                  className="p-1 text-gray-400 hover:text-gray-600 transition-colors mr-2 focus:outline-none"
-                  aria-label="Clear search"
+                  className="p-1 text-gray-400 hover:text-gray-600 transition-colors mr-1 focus:outline-none cursor-pointer shrink-0"
+                  aria-label="Clear search query"
+                  title="Clear text"
                 >
                   <X className="w-4 h-4" />
                 </button>
               )}
+              {/* Close Modal Cross Button */}
               <button
                 onClick={onClose}
-                className="px-2.5 py-1 text-xs font-sans font-semibold text-gray-500 bg-gray-200/70 hover:bg-gray-200 rounded-md transition-colors focus:outline-none"
+                className="p-1.5 text-gray-400 hover:text-[var(--color-navy)] hover:bg-gray-200/60 rounded-full transition-colors focus:outline-none cursor-pointer shrink-0 ml-1"
+                aria-label="Close search"
+                title="Close"
               >
-                ESC
+                <X className="w-5 h-5 stroke-[2.2]" />
               </button>
             </div>
 
@@ -266,7 +275,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
             {/* Modal Footer */}
             <div className="px-5 py-3 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between text-[11px] font-sans text-gray-400">
               <span>Vedah Vital Search</span>
-              <span>Press <kbd className="px-1.5 py-0.5 bg-white border rounded shadow-xs text-gray-600 font-mono text-[10px]">ESC</kbd> to close</span>
+              <span>Click outside or press <kbd className="px-1.5 py-0.5 bg-white border rounded shadow-xs text-gray-600 font-mono text-[10px]">ESC</kbd> to close</span>
             </div>
           </motion.div>
         </div>
