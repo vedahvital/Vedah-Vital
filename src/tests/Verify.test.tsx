@@ -2,7 +2,17 @@ import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Verify } from '../pages/Verify';
+
+const createTestQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
 
 const renderVerify = (search = '') => {
   // Set up URL search params for the component
@@ -10,12 +20,15 @@ const renderVerify = (search = '') => {
     writable: true,
     value: { search, pathname: '/verify', href: 'http://localhost/verify' },
   });
+  const queryClient = createTestQueryClient();
   return render(
-    <HelmetProvider>
-      <MemoryRouter initialEntries={['/verify' + search]}>
-        <Verify />
-      </MemoryRouter>
-    </HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
+        <MemoryRouter initialEntries={['/verify' + search]}>
+          <Verify />
+        </MemoryRouter>
+      </HelmetProvider>
+    </QueryClientProvider>
   );
 };
 
