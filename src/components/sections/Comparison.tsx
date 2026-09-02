@@ -112,8 +112,8 @@ export const Comparison: React.FC = () => {
                       desc: "Contains a full spectrum of withanolides, balanced for Calmness, Clarity, and cognitive support."
                     },
                     {
-                      title: "GRAS Affirmed & Certified",
-                      desc: "Rigorously third-party certified, meeting highest purity standards. Non-GMO Project Verified."
+                      title: "Certified",
+                      desc: "Rigorously third-party certified, meeting highest purity standards."
                     },
                     {
                       title: "Traditional Wisdom",

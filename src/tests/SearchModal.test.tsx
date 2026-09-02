@@ -66,4 +66,43 @@ describe('SearchModal Component', () => {
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it('matches multi-word and tokenized search queries effectively', () => {
+    renderSearchModal(true);
+    const input = screen.getByPlaceholderText(/search products, lab verification, ingredients/i);
+
+    // Multi-word search
+    fireEvent.change(input, { target: { value: 'sleep stress' } });
+    expect(screen.getByText(/ksm-66® organic ashwagandha/i)).toBeInTheDocument();
+
+    // Partial prefix search
+    fireEvent.change(input, { target: { value: 'withan' } });
+    expect(screen.getAllByText(/withaferin|withanolides|ashwagandha/i).length).toBeGreaterThan(0);
+
+    // Heavy metals search
+    fireEvent.change(input, { target: { value: 'lead mercury' } });
+    expect(screen.getByText(/heavy metal & microbial screening/i)).toBeInTheDocument();
+  });
+
+  it('filters results by category when category tab is selected', () => {
+    renderSearchModal(true);
+    const input = screen.getByPlaceholderText(/search products, lab verification, ingredients/i);
+
+    fireEvent.change(input, { target: { value: 'evidence' } });
+    
+    // Select Science category tab
+    const scienceTab = screen.getByRole('button', { name: /^science$/i });
+    fireEvent.click(scienceTab);
+
+    expect(screen.getByText(/clinical studies & scientific evidence/i)).toBeInTheDocument();
+  });
+
+  it('shows helpful suggestions on query with no matches', () => {
+    renderSearchModal(true);
+    const input = screen.getByPlaceholderText(/search products, lab verification, ingredients/i);
+
+    fireEvent.change(input, { target: { value: 'xyzunknownterm999' } });
+    expect(screen.getByText(/no matching results/i)).toBeInTheDocument();
+    expect(screen.getByText(/try one of these suggestions/i)).toBeInTheDocument();
+  });
 });

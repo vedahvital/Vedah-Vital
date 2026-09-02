@@ -269,7 +269,7 @@ export const Hero: React.FC = () => {
                       {[
                         "Lowest Cytotoxicity (Safe)",
                         "Standardized & Bioactive",
-                        "GRAS Affirmed & Certified",
+                        "Certified",
                         "Traditional Wisdom"
                       ].map((title, idx) => (
                         <div key={idx} className="flex gap-1.5 sm:gap-2.5 items-center">
