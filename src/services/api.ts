@@ -28,6 +28,147 @@ export interface CounterfeitPayload {
   notes?: string;
 }
 
+export interface VerificationProduct {
+  name: string;
+  brand: string;
+  strength: string;
+  blackPepperExtract: string;
+  packSize: string;
+  batchNumber: string;
+  mfgDate: string;
+  expDate: string;
+}
+
+export type VerificationStatus = 'GENUINE' | 'ALREADY_SCANNED' | 'NOT_FOUND' | 'INVALID';
+
+export interface LabReportsImages {
+  potency: string[];
+  heavyMetals: string[];
+  microbial: string[];
+}
+
+export interface VerificationResult {
+  status: VerificationStatus;
+  verified: boolean;
+  code: string;
+  message?: string;
+  firstVerificationDate?: string | Date;
+  currentScanDate?: string | Date;
+  verificationDate?: string | Date;
+  scanCount?: number;
+  product?: VerificationProduct;
+  labReports?: LabReportsImages;
+  report?: LabTestReport | null;
+}
+
+/**
+ * Verifies QR code or batch number against backend with support for all 3 verification scenarios.
+ */
+export const verifyCodeOnline = async (codeStr: string): Promise<VerificationResult> => {
+  const normalizedCode = codeStr.trim().toUpperCase();
+  if (!normalizedCode) {
+    return {
+      status: 'INVALID',
+      verified: false,
+      code: '',
+      message: 'Please provide a valid identification code.'
+    };
+  }
+
+  if (!API_BASE_URL) {
+    // Local fallback for offline/development demo
+    const mockReport = LAB_REPORTS[normalizedCode];
+    if (mockReport) {
+      return {
+        status: 'GENUINE',
+        verified: true,
+        code: normalizedCode,
+        verificationDate: new Date(),
+        product: {
+          name: 'KSM-66® Ashwagandha Root Extract',
+          brand: 'VEDAH VITAL',
+          strength: '500 mg',
+          blackPepperExtract: '5 mg',
+          packSize: '60 Vegan Capsules',
+          batchNumber: mockReport.batchCode,
+          mfgDate: mockReport.mfgDate,
+          expDate: mockReport.expDate
+        },
+        report: mockReport,
+        message: 'Your product has been successfully verified.'
+      };
+    }
+    return {
+      status: 'NOT_FOUND',
+      verified: false,
+      code: normalizedCode,
+      message: "We could not verify this product's identification code. Please contact VEDAH VITAL customer support before using the product."
+    };
+  }
+
+  try {
+    const response = await apiClient.get<VerificationResult>(`/verify/${encodeURIComponent(normalizedCode)}`);
+    const data = response.data;
+    // Attach COA report if matched in local mock lab records
+    const labReport = LAB_REPORTS[normalizedCode] || null;
+    return {
+      ...data,
+      report: data.report || labReport
+    };
+  } catch (error: any) {
+    const resp = error.response?.data;
+    if (resp?.status) {
+      return resp;
+    }
+    if (error.response?.status === 404) {
+      return {
+        status: 'NOT_FOUND',
+        verified: false,
+        code: normalizedCode,
+        message: "We could not verify this product's identification code. Please contact VEDAH VITAL customer support before using the product."
+      };
+    }
+    if (error.response?.status === 409) {
+      return {
+        status: 'ALREADY_SCANNED',
+        verified: false,
+        code: normalizedCode,
+        firstVerificationDate: resp?.firstVerificationDate || new Date().toISOString(),
+        currentScanDate: new Date().toISOString(),
+        message: "This product's QR code has previously been scanned."
+      };
+    }
+    // Fallback if network offline
+    const fallbackMock = LAB_REPORTS[normalizedCode];
+    if (fallbackMock) {
+      return {
+        status: 'GENUINE',
+        verified: true,
+        code: normalizedCode,
+        verificationDate: new Date(),
+        product: {
+          name: 'KSM-66® Ashwagandha Root Extract',
+          brand: 'VEDAH VITAL',
+          strength: '500 mg',
+          blackPepperExtract: '5 mg',
+          packSize: '60 Vegan Capsules',
+          batchNumber: fallbackMock.batchCode,
+          mfgDate: fallbackMock.mfgDate,
+          expDate: fallbackMock.expDate
+        },
+        report: fallbackMock,
+        message: 'Your product has been successfully verified.'
+      };
+    }
+    return {
+      status: 'NOT_FOUND',
+      verified: false,
+      code: normalizedCode,
+      message: "We could not verify this product's identification code. Please contact VEDAH VITAL customer support before using the product."
+    };
+  }
+};
+
 /**
  * Fetches batch report details from backend API with fallback to local mock data.
  */
@@ -41,8 +182,9 @@ export const fetchBatchReport = async (batchCode: string): Promise<LabTestReport
   }
 
   try {
-    const response = await apiClient.get<{ report: LabTestReport }>(`/verify/${encodeURIComponent(normalizedCode)}`);
-    return response.data?.report || null;
+    const res = await verifyCodeOnline(normalizedCode);
+    if (res.report) return res.report;
+    return LAB_REPORTS[normalizedCode] || null;
   } catch (error) {
     console.warn(`[Vedah API] Failed to fetch report for batch ${normalizedCode}, checking mock data:`, error);
     return LAB_REPORTS[normalizedCode] || null;

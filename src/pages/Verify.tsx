@@ -8,8 +8,8 @@ import { Button } from '../components/ui/Button';
 import { LAB_REPORTS, type LabTestReport } from '../lib/mockData';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 
-import { useBatchVerification } from '../hooks/useBatchVerification';
 import { validateBatchCodeFormat } from '../lib/qrUtils';
+import { verifyCodeOnline, type VerificationResult } from '../services/api';
 
 export const Verify: React.FC = () => {
   const [code, setCode] = useState(() => {
@@ -24,70 +24,15 @@ export const Verify: React.FC = () => {
     }
     return '';
   });
-  const [searchCode, setSearchCode] = useState('');
   const [loading, setLoading] = useState(false);
-  const [report, setReport] = useState<LabTestReport | null>(() => {
-    if (typeof window === 'undefined') return null;
-    const params = new URLSearchParams(window.location.search);
-    const batchParam = params.get('batch');
-    const sourceParam = params.get('source');
-    if (sourceParam === 'qr' && batchParam) {
-      const query = batchParam.trim().toUpperCase();
-      return LAB_REPORTS[query] || null;
-    }
-    return null;
-  });
+  const [report, setReport] = useState<LabTestReport | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [hasSearched, setHasSearched] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const params = new URLSearchParams(window.location.search);
-    const batchParam = params.get('batch');
-    const sourceParam = params.get('source');
-    if (sourceParam === 'qr' && batchParam) {
-      const query = batchParam.trim().toUpperCase();
-      return !!LAB_REPORTS[query];
-    }
-    return false;
-  });
-
-  const { data: fetchedReport, isFetched } = useBatchVerification(searchCode, hasSearched);
-
-  useEffect(() => {
-    if (hasSearched && isFetched) {
-      setLoading(false);
-      if (fetchedReport) {
-        setReport(fetchedReport);
-        setError(null);
-      } else {
-        setReport(null);
-        setError('Batch code not found. Please double-check the code printed near the barcode on your bottle (e.g. VV-ASH-2026-001).');
-      }
-    }
-  }, [hasSearched, isFetched, fetchedReport]);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const [showScanner, setShowScanner] = useState(false);
-  const [qrModalStatus, setQrModalStatus] = useState<'genuine' | 'fake' | null>(() => {
-    if (typeof window === 'undefined') return null;
-    const params = new URLSearchParams(window.location.search);
-    const batchParam = params.get('batch');
-    const sourceParam = params.get('source');
-    if (sourceParam === 'qr' && batchParam) {
-      const query = batchParam.trim().toUpperCase();
-      return LAB_REPORTS[query] ? 'genuine' : 'fake';
-    }
-    return null;
-  });
-  const [qrScannedBatch, setQrScannedBatch] = useState<string | null>(() => {
-    if (typeof window === 'undefined') return null;
-    const params = new URLSearchParams(window.location.search);
-    const batchParam = params.get('batch');
-    const sourceParam = params.get('source');
-    if (sourceParam === 'qr' && batchParam) {
-      return batchParam.trim().toUpperCase();
-    }
-    return null;
-  });
+  const [qrModalResult, setQrModalResult] = useState<VerificationResult | null>(null);
 
+  // Initialize and verify from QR URL on mount
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
@@ -95,13 +40,22 @@ export const Verify: React.FC = () => {
     const sourceParam = params.get('source');
 
     if (sourceParam === 'qr' && batchParam) {
+      const targetCode = batchParam.trim().toUpperCase();
+      // Execute online verification against backend
+      verifyCodeOnline(targetCode).then((res) => {
+        setQrModalResult(res);
+        if (res.report) {
+          setReport(res.report);
+        }
+      });
+
       // Clean query params from address bar
       const newUrl = window.location.pathname;
       window.history.replaceState({}, document.title, newUrl);
     }
   }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     const query = code.trim().toUpperCase();
     if (!query) return;
@@ -109,8 +63,19 @@ export const Verify: React.FC = () => {
     setLoading(true);
     setError(null);
     setReport(null);
-    setSearchCode(query);
     setHasSearched(true);
+
+    try {
+      const res = await verifyCodeOnline(query);
+      setLoading(false);
+      setQrModalResult(res);
+      if (res.report) {
+        setReport(res.report);
+      }
+    } catch (err: any) {
+      setLoading(false);
+      setError(err?.message || 'Batch verification failed.');
+    }
   };
 
   return (
@@ -355,6 +320,128 @@ export const Verify: React.FC = () => {
                 </motion.div>
               )}
 
+              {/* Lab Reports Images Section (Uploaded via CMS: Potency, Heavy Metals, Microbial) */}
+              {qrModalResult?.labReports && (
+                (qrModalResult.labReports.potency?.length > 0 ||
+                 qrModalResult.labReports.heavyMetals?.length > 0 ||
+                 qrModalResult.labReports.microbial?.length > 0)
+              ) && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
+                  className="mt-8 glass-card-navy p-6 md:p-10 text-left shadow-sm rounded-3xl"
+                >
+                  <div className="border-b border-[rgba(10,25,47,0.15)] pb-4 mb-6">
+                    <span className="eyebrow text-[var(--color-navy)] block text-xs">OFFICIAL LABORATORY CERTIFICATES</span>
+                    <h3 className="font-sans text-xl font-bold uppercase tracking-wide text-[var(--color-heading)] mt-1">
+                      Scanned Lab Test Documents & Assays
+                    </h3>
+                    <p className="font-sans text-xs text-slate-600 mt-1">
+                      High-resolution third-party lab documentation for batch verification. Click on any certificate to view or download.
+                    </p>
+                  </div>
+
+                  <div className="space-y-8">
+                    {/* 1. Potency */}
+                    {qrModalResult.labReports.potency?.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-3">
+                          <FlaskConical className="w-4 h-4 text-[var(--color-navy)]" />
+                          <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-[var(--color-heading)]">
+                            1. Active Potency Assay Certificate ({qrModalResult.labReports.potency.length} images)
+                          </h4>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                          {qrModalResult.labReports.potency.map((imgUrl, i) => (
+                            <a
+                              key={i}
+                              href={imgUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group relative aspect-[3/4] overflow-hidden rounded-xl border border-[rgba(10,25,47,0.15)] bg-slate-100 hover:shadow-md transition-shadow"
+                            >
+                              <img
+                                src={imgUrl}
+                                alt={`Potency assay certificate page ${i + 1}`}
+                                className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-semibold gap-1">
+                                <Search className="w-3.5 h-3.5" /> View
+                              </div>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 2. Heavy Metals */}
+                    {qrModalResult.labReports.heavyMetals?.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-3">
+                          <ShieldCheck className="w-4 h-4 text-[var(--color-navy)]" />
+                          <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-[var(--color-heading)]">
+                            2. Heavy Metals & Toxins Audit Certificate ({qrModalResult.labReports.heavyMetals.length} images)
+                          </h4>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                          {qrModalResult.labReports.heavyMetals.map((imgUrl, i) => (
+                            <a
+                              key={i}
+                              href={imgUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group relative aspect-[3/4] overflow-hidden rounded-xl border border-[rgba(10,25,47,0.15)] bg-slate-100 hover:shadow-md transition-shadow"
+                            >
+                              <img
+                                src={imgUrl}
+                                alt={`Heavy metals test page ${i + 1}`}
+                                className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-semibold gap-1">
+                                <Search className="w-3.5 h-3.5" /> View
+                              </div>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 3. Microbial */}
+                    {qrModalResult.labReports.microbial?.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-3">
+                          <FileSpreadsheet className="w-4 h-4 text-[var(--color-navy)]" />
+                          <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-[var(--color-heading)]">
+                            3. Microbial Screening Certificate ({qrModalResult.labReports.microbial.length} images)
+                          </h4>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                          {qrModalResult.labReports.microbial.map((imgUrl, i) => (
+                            <a
+                              key={i}
+                              href={imgUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group relative aspect-[3/4] overflow-hidden rounded-xl border border-[rgba(10,25,47,0.15)] bg-slate-100 hover:shadow-md transition-shadow"
+                            >
+                              <img
+                                src={imgUrl}
+                                alt={`Microbial screening page ${i + 1}`}
+                                className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-semibold gap-1">
+                                <Search className="w-3.5 h-3.5" /> View
+                              </div>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
               {/* No search yet */}
               {!hasSearched && !loading && (
                 <AnimatedSection className="text-center py-14 border border-dashed border-[rgba(10, 25, 47,0.35)] p-8 bg-white shadow-sm">
@@ -381,128 +468,261 @@ export const Verify: React.FC = () => {
     </>
   );
 
-  // Popup verified/fake modal overlay
+  // Popup verified/fake/repeat modal overlay according to exact Scenario A, B, and C
   function renderQrStatusModal() {
-  if (!qrModalStatus) return null;
+    if (!qrModalResult) return null;
 
-  const isGenuine = qrModalStatus === 'genuine';
-  const reportData = isGenuine && qrScannedBatch ? LAB_REPORTS[qrScannedBatch] : null;
+    const { status, code: targetCode, product, firstVerificationDate, currentScanDate, report: matchedReport } = qrModalResult;
 
-  return (
-    <div className="fixed inset-0 bg-black/35 backdrop-blur-[3px] flex items-center justify-center z-50 p-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 15 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="bg-white/95 border border-[rgba(10,25,47,0.15)] max-w-md w-full p-8 rounded-3xl relative shadow-2xl text-left"
-      >
-        {isGenuine ? (
-          <>
-            {/* Decorative background icon */}
-            <div className="absolute right-4 top-4 pointer-events-none opacity-[0.05] text-[var(--color-navy)]">
-              <Award className="w-24 h-24 stroke-[1.25]" />
-            </div>
+    const formatDateStr = (d?: string | Date) => {
+      if (!d) return '—';
+      try {
+        const dateObj = new Date(d);
+        if (isNaN(dateObj.getTime())) return String(d);
+        return dateObj.toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        });
+      } catch {
+        return String(d);
+      }
+    };
 
-            <div className="w-14 h-14 rounded-full bg-green-500/10 border border-green-500/25 flex items-center justify-center mb-6 text-green-600">
-              <ShieldCheck className="w-8 h-8 stroke-[1.5]" />
-            </div>
+    return (
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 15 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="bg-white border border-[rgba(10,25,47,0.15)] max-w-lg w-full p-8 rounded-3xl relative shadow-2xl text-left"
+        >
+          {/* Close button */}
+          <button
+            onClick={() => setQrModalResult(null)}
+            className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 transition-colors p-1 rounded-full"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
 
-            <h3 className="heading-condensed text-3xl text-[var(--color-heading)] tracking-wide mb-2 uppercase">
-              Genuine Product Verified
-            </h3>
-            
-            <div className="font-sans text-xs text-[var(--color-navy)] uppercase tracking-widest mb-4 font-semibold">
-              Batch: {qrScannedBatch}
-            </div>
+          {/* Scenario A: Genuine product */}
+          {status === 'GENUINE' && (
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl">🟢</span>
+                <span className="font-sans font-bold text-sm tracking-wider uppercase text-emerald-700">
+                  AUTHENTIC PRODUCT VERIFIED
+                </span>
+              </div>
 
-            <p className="font-sans text-sm font-light text-[var(--color-text)] opacity-90 leading-relaxed mb-6">
-              This Vedah Vital product is officially verified as authentic. It matches our laboratory database records and has been manufactured in compliance with strict cGMP safety guidelines.
-            </p>
+              <div className="border-b border-gray-100 pb-3 mb-4">
+                <span className="eyebrow text-[var(--color-navy)] block text-xs tracking-widest font-semibold">
+                  VEDAH VITAL
+                </span>
+                <p className="font-sans text-sm text-gray-600 mt-1">
+                  Your product has been successfully verified.
+                </p>
+              </div>
 
-            <div className="flex flex-col gap-3">
-              {reportData && (
-                <a href={reportData.certificateUrl} className="w-full focus:outline-none">
-                  <Button variant="primary" className="w-full py-3 gap-2 justify-center">
-                    <Download className="w-4 h-4" />
-                    Download Lab Report (PDF)
+              <div className="space-y-2 py-3 bg-slate-50/80 rounded-2xl p-5 border border-slate-100 text-sm font-sans mb-6">
+                <div className="font-semibold text-slate-900 border-b border-slate-200/60 pb-2">
+                  Product: {product?.name || 'KSM-66® Ashwagandha Root Extract'}
+                </div>
+                <ul className="space-y-1.5 text-xs sm:text-sm text-slate-700 pt-1">
+                  <li className="flex justify-between">
+                    <span className="text-slate-500">• Brand:</span>
+                    <span className="font-medium text-slate-900">{product?.brand || 'VEDAH VITAL'}</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="text-slate-500">• Strength:</span>
+                    <span className="font-medium text-slate-900">{product?.strength || '500 mg'}</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="text-slate-500">• Black Pepper Extract:</span>
+                    <span className="font-medium text-slate-900">{product?.blackPepperExtract || '5 mg'}</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="text-slate-500">• Pack Size:</span>
+                    <span className="font-medium text-slate-900">{product?.packSize || '60 Vegan Capsules'}</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="text-slate-500">• Batch Number:</span>
+                    <span className="font-mono font-semibold text-slate-900">{product?.batchNumber || targetCode}</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="text-slate-500">• Manufacturing Date:</span>
+                    <span className="font-medium text-slate-900">{product?.mfgDate || '—'}</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="text-slate-500">• Expiry Date:</span>
+                    <span className="font-medium text-slate-900">{product?.expDate || '—'}</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="text-center font-sans text-xs text-slate-500 mb-6 border-t border-slate-100 pt-3">
+                <p className="font-medium text-slate-700">Thank you for choosing VEDAH VITAL.</p>
+                <p className="italic text-slate-400 mt-0.5">Rooted in Nature. Made with Intention.</p>
+              </div>
+
+              <div className="flex flex-col gap-2.5">
+                {qrModalResult.labReports && (
+                  qrModalResult.labReports.potency?.length > 0 ||
+                  qrModalResult.labReports.heavyMetals?.length > 0 ||
+                  qrModalResult.labReports.microbial?.length > 0
+                ) && (
+                  <Button
+                    variant="outline"
+                    className="w-full border-[var(--color-navy)]/30 text-[var(--color-navy)] hover:bg-[var(--color-navy-light)] py-2.5 text-xs font-semibold"
+                    onClick={() => {
+                      setQrModalResult(null);
+                      setTimeout(() => {
+                        window.scrollTo({ top: 600, behavior: 'smooth' });
+                      }, 100);
+                    }}
+                  >
+                    View Attached Lab Report Certificates ({
+                      (qrModalResult.labReports.potency?.length || 0) +
+                      (qrModalResult.labReports.heavyMetals?.length || 0) +
+                      (qrModalResult.labReports.microbial?.length || 0)
+                    } images)
                   </Button>
-                </a>
-              )}
-              <Button
-                variant="outline"
-                className="w-full border-[var(--color-navy)]/20 text-[var(--color-navy)] hover:bg-[var(--color-navy-light)]"
-                onClick={() => {
-                  setQrModalStatus(null);
-                  // Scroll to results
-                  setTimeout(() => {
-                    const el = document.getElementById('batch-code-input');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }, 100);
-                }}
-              >
-                View Detailed Lab Analysis
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full border-transparent bg-transparent text-[var(--color-text)] opacity-70 hover:opacity-100 hover:bg-[var(--color-navy-light)]"
-                onClick={() => setQrModalStatus(null)}
-              >
-                Explore Website
-              </Button>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="w-14 h-14 rounded-full bg-red-500/10 border border-red-500/25 flex items-center justify-center mb-6 text-red-600">
-              <AlertCircle className="w-8 h-8 stroke-[1.5]" />
-            </div>
-
-            <h3 className="heading-condensed text-3xl text-[var(--color-heading)] tracking-wide mb-2 uppercase">
-              Product Not Verified
-            </h3>
-
-            <div className="font-sans text-xs text-red-600 uppercase tracking-widest mb-4 font-semibold">
-              Unrecognized Code: {qrScannedBatch}
-            </div>
-
-            <p className="font-sans text-sm font-light text-[var(--color-text)] opacity-90 leading-relaxed mb-6">
-              We could not locate this batch number in our database. This QR code may be counterfeit, or there may have been a scanning error. Please verify the code printed near the barcode on the bottle.
-            </p>
-
-            <div className="flex flex-col gap-3">
-              <Button
-                variant="primary"
-                className="w-full bg-red-600 hover:bg-red-500 border-transparent py-3 text-white justify-center shadow-lg"
-                onClick={() => {
-                  setQrModalStatus(null);
-                  setCode(qrScannedBatch || '');
-                  // Focus input
-                  const el = document.getElementById('batch-code-input');
-                  el?.focus();
-                }}
-              >
-                Edit and Verify Manually
-              </Button>
-              <a href={`mailto:info@vedahvital.com?subject=${encodeURIComponent(`Unverified QR Code Alert: ${qrScannedBatch}`)}`} className="w-full focus:outline-none">
+                )}
+                {matchedReport && (
+                  <a href={matchedReport.certificateUrl} className="w-full focus:outline-none">
+                    <Button variant="primary" className="w-full py-2.5 gap-2 justify-center text-xs">
+                      <Download className="w-4 h-4" />
+                      Download Lab Report (COA PDF)
+                    </Button>
+                  </a>
+                )}
                 <Button
                   variant="outline"
-                  className="w-full border-[var(--color-navy)]/20 text-[var(--color-navy)] hover:bg-[var(--color-navy-light)] justify-center"
+                  className="w-full border-slate-200 text-slate-700 hover:bg-slate-50 py-2.5 text-xs"
+                  onClick={() => setQrModalResult(null)}
                 >
-                  Report Counterfeit to Support
+                  Close & Explore Website
                 </Button>
-              </a>
-              <Button
-                variant="outline"
-                className="w-full border-transparent bg-transparent text-[var(--color-text)] opacity-70 hover:opacity-100 hover:bg-[var(--color-navy-light)]"
-                onClick={() => setQrModalStatus(null)}
-              >
-                Explore Website
-              </Button>
+              </div>
             </div>
-          </>
-        )}
-      </motion.div>
-    </div>
-  );
+          )}
+
+          {/* Scenario B: Code already scanned */}
+          {status === 'ALREADY_SCANNED' && (
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl">🟠</span>
+                <span className="font-sans font-bold text-sm tracking-wider uppercase text-amber-700">
+                  VERIFICATION NOTICE
+                </span>
+              </div>
+
+              <div className="border-b border-gray-100 pb-3 mb-4">
+                <p className="font-sans text-sm text-gray-700 leading-relaxed">
+                  This product's QR code has previously been scanned.
+                </p>
+              </div>
+
+              <div className="space-y-2 py-3 bg-amber-50/60 rounded-2xl p-5 border border-amber-200/60 text-sm font-sans mb-5">
+                <ul className="space-y-2 text-xs sm:text-sm text-amber-950">
+                  <li className="flex justify-between">
+                    <span className="text-amber-800">• First verification date:</span>
+                    <span className="font-semibold">{formatDateStr(firstVerificationDate)}</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="text-amber-800">• Current scan date:</span>
+                    <span className="font-semibold">{formatDateStr(currentScanDate || new Date())}</span>
+                  </li>
+                  {product?.batchNumber && (
+                    <li className="flex justify-between border-t border-amber-200/50 pt-2 text-xs">
+                      <span className="text-amber-800">• Batch Number:</span>
+                      <span className="font-mono font-medium">{product.batchNumber}</span>
+                    </li>
+                  )}
+                </ul>
+              </div>
+
+              <div className="text-xs font-sans text-slate-600 space-y-2 mb-6">
+                <p>If you have just purchased this product, please contact VEDAH VITAL customer support.</p>
+                <p className="text-[11px] text-slate-500 italic">
+                  Note: A repeat scan does not automatically mean the product is counterfeit.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-2.5">
+                <a
+                  href={`mailto:info@vedahvital.com?subject=${encodeURIComponent(`Repeat QR Code Notice: ${targetCode}`)}`}
+                  className="w-full focus:outline-none"
+                >
+                  <Button variant="primary" className="w-full bg-amber-700 hover:bg-amber-600 text-white py-2.5 text-xs justify-center shadow-md">
+                    Contact Customer Support
+                  </Button>
+                </a>
+                <Button
+                  variant="outline"
+                  className="w-full border-slate-200 text-slate-700 hover:bg-slate-50 py-2.5 text-xs"
+                  onClick={() => setQrModalResult(null)}
+                >
+                  Dismiss Notice
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Scenario C: Invalid QR code */}
+          {(status === 'NOT_FOUND' || status === 'INVALID') && (
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl">🔴</span>
+                <span className="font-sans font-bold text-sm tracking-wider uppercase text-red-700">
+                  PRODUCT NOT VERIFIED
+                </span>
+              </div>
+
+              <div className="border-b border-gray-100 pb-3 mb-4">
+                <p className="font-sans text-sm text-gray-700 leading-relaxed">
+                  We could not verify this product's identification code.
+                </p>
+                {targetCode && (
+                  <div className="font-mono text-xs text-red-600 mt-2 bg-red-50 p-2 rounded-lg inline-block border border-red-100">
+                    Code: {targetCode}
+                  </div>
+                )}
+              </div>
+
+              <div className="p-4 bg-red-50/50 border border-red-200/60 rounded-2xl mb-6">
+                <p className="font-sans text-xs text-red-800 leading-relaxed font-medium">
+                  Please contact VEDAH VITAL customer support before using the product.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-2.5">
+                <a
+                  href={`mailto:info@vedahvital.com?subject=${encodeURIComponent(`Unverified Product Alert: ${targetCode}`)}`}
+                  className="w-full focus:outline-none"
+                >
+                  <Button variant="primary" className="w-full bg-red-600 hover:bg-red-500 text-white py-2.5 text-xs justify-center shadow-md">
+                    Contact VEDAH VITAL Support
+                  </Button>
+                </a>
+                <Button
+                  variant="outline"
+                  className="w-full border-slate-200 text-slate-700 hover:bg-slate-50 py-2.5 text-xs"
+                  onClick={() => {
+                    setQrModalResult(null);
+                    setCode(targetCode || '');
+                    const el = document.getElementById('batch-code-input');
+                    el?.focus();
+                  }}
+                >
+                  Edit & Retry Code
+                </Button>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      </div>
+    );
   }
 
   // QR Code Scanner Modal
@@ -559,33 +779,77 @@ export const Verify: React.FC = () => {
         {/* Simulation Help Panel */}
         <div className="border border-white/10 bg-white/5 rounded-2xl p-4 text-left">
           <span className="font-sans text-[9px] font-bold uppercase tracking-wider text-white/50 block mb-2">
-            Developer QR Simulation
+            Developer QR Simulation (Test All 3 Scenarios)
           </span>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             <Button
               variant="primary"
-              className="py-2 px-3 text-[9px] justify-center"
+              className="py-2 px-2 text-[9px] justify-center bg-emerald-600 hover:bg-emerald-500"
               onClick={() => {
                 setShowScanner(false);
-                setQrScannedBatch('VV-ASH-2026-001');
-                setQrModalStatus('genuine');
+                setQrModalResult({
+                  status: 'GENUINE',
+                  verified: true,
+                  code: 'VV-ASH-2026-001',
+                  verificationDate: new Date(),
+                  product: {
+                    name: 'KSM-66® Ashwagandha Root Extract',
+                    brand: 'VEDAH VITAL',
+                    strength: '500 mg',
+                    blackPepperExtract: '5 mg',
+                    packSize: '60 Vegan Capsules',
+                    batchNumber: 'VV-ASH-2026-001',
+                    mfgDate: '10/05/2026',
+                    expDate: '09/05/2028'
+                  },
+                  report: LAB_REPORTS['VV-ASH-2026-001']
+                });
                 setReport(LAB_REPORTS['VV-ASH-2026-001']);
                 setCode('VV-ASH-2026-001');
                 setHasSearched(true);
               }}
             >
-              Simulate Valid QR
+              Scenario A
+            </Button>
+            <Button
+              variant="primary"
+              className="py-2 px-2 text-[9px] justify-center bg-amber-600 hover:bg-amber-500 text-white"
+              onClick={() => {
+                setShowScanner(false);
+                setQrModalResult({
+                  status: 'ALREADY_SCANNED',
+                  verified: false,
+                  code: 'VV-ASH-2026-001',
+                  firstVerificationDate: '2026-05-15T10:30:00Z',
+                  currentScanDate: new Date().toISOString(),
+                  product: {
+                    name: 'KSM-66® Ashwagandha Root Extract',
+                    brand: 'VEDAH VITAL',
+                    strength: '500 mg',
+                    blackPepperExtract: '5 mg',
+                    packSize: '60 Vegan Capsules',
+                    batchNumber: 'VV-ASH-2026-001',
+                    mfgDate: '10/05/2026',
+                    expDate: '09/05/2028'
+                  }
+                });
+              }}
+            >
+              Scenario B
             </Button>
             <Button
               variant="outline"
-              className="py-2 px-3 text-[9px] justify-center text-white border-white/20 hover:bg-white/10"
+              className="py-2 px-2 text-[9px] justify-center text-red-300 border-red-400/40 hover:bg-red-950/30"
               onClick={() => {
                 setShowScanner(false);
-                setQrScannedBatch('VV-FAKE-9999');
-                setQrModalStatus('fake');
+                setQrModalResult({
+                  status: 'NOT_FOUND',
+                  verified: false,
+                  code: 'VV-INVALID-9999'
+                });
               }}
             >
-              Simulate Fake QR
+              Scenario C
             </Button>
           </div>
         </div>
