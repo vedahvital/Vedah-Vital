@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Search, Download, AlertCircle, FileSpreadsheet, FlaskConical, Award, QrCode, Camera, X } from 'lucide-react';
+import { ShieldCheck, Search, Download, AlertCircle, FileSpreadsheet, FlaskConical, Award, QrCode, Camera, Upload, X, Loader2 } from 'lucide-react';
+import { Html5Qrcode } from 'html5-qrcode';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { Button } from '../components/ui/Button';
@@ -9,7 +10,7 @@ import { type LabTestReport } from '../lib/mockData';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 
 import { validateBatchCodeFormat } from '../lib/qrUtils';
-import { verifyCodeOnline, type VerificationResult } from '../services/api';
+import { verifyCodeOnline, verifyQrImageOnline, type VerificationResult } from '../services/api';
 
 export const Verify: React.FC = () => {
   const [code, setCode] = useState(() => {
@@ -31,6 +32,11 @@ export const Verify: React.FC = () => {
 
   const [showScanner, setShowScanner] = useState(false);
   const [qrModalResult, setQrModalResult] = useState<VerificationResult | null>(null);
+  const [cameraActive, setCameraActive] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [imageUploading, setImageUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
 
   // Initialize and verify from QR URL on mount
   useEffect(() => {
@@ -54,6 +60,139 @@ export const Verify: React.FC = () => {
       window.history.replaceState({}, document.title, newUrl);
     }
   }, []);
+
+  // Cleanup camera scanner on unmount or modal close
+  useEffect(() => {
+    if (!showScanner && html5QrCodeRef.current) {
+      if (html5QrCodeRef.current.isScanning) {
+        html5QrCodeRef.current.stop().catch(() => {}).finally(() => {
+          html5QrCodeRef.current?.clear();
+          html5QrCodeRef.current = null;
+        });
+      } else {
+        html5QrCodeRef.current.clear();
+        html5QrCodeRef.current = null;
+      }
+      setCameraActive(false);
+      setCameraError(null);
+    }
+  }, [showScanner]);
+
+  // Handle successful code extracted from live camera or image
+  const handleDecodedCode = async (decodedText: string) => {
+    let cleanCode = decodedText.trim();
+    // If it's a URL (e.g. https://vedahvital.com/verify?batch=VV-XXX&source=qr), parse the batch parameter
+    try {
+      if (cleanCode.includes('?')) {
+        const url = new URL(cleanCode, window.location.origin);
+        const b = url.searchParams.get('batch');
+        if (b) cleanCode = b.trim();
+      }
+    } catch {
+      // not a URL, use decoded string directly
+    }
+
+    cleanCode = cleanCode.toUpperCase();
+    setCode(cleanCode);
+    setShowScanner(false);
+    setLoading(true);
+    setError(null);
+    setReport(null);
+    setHasSearched(true);
+
+    try {
+      const res = await verifyCodeOnline(cleanCode);
+      setLoading(false);
+      setQrModalResult(res);
+      if (res.report) setReport(res.report);
+    } catch (err: any) {
+      setLoading(false);
+      setError(err?.message || 'Verification failed.');
+    }
+  };
+
+  // Start real camera stream
+  const startCameraScanner = async () => {
+    setCameraError(null);
+    try {
+      const scannerId = 'qr-reader-viewport';
+      if (!html5QrCodeRef.current) {
+        html5QrCodeRef.current = new Html5Qrcode(scannerId);
+      }
+
+      await html5QrCodeRef.current.start(
+        { facingMode: 'environment' },
+        {
+          fps: 10,
+          qrbox: { width: 220, height: 220 },
+        },
+        (decodedText) => {
+          // Success callback
+          if (html5QrCodeRef.current?.isScanning) {
+            html5QrCodeRef.current.stop().catch(() => {}).finally(() => {
+              handleDecodedCode(decodedText);
+            });
+          } else {
+            handleDecodedCode(decodedText);
+          }
+        },
+        () => {
+          // ignore scan frame misses
+        }
+      );
+      setCameraActive(true);
+    } catch (err: any) {
+      console.warn('Camera scanner initialization error:', err);
+      setCameraActive(false);
+      setCameraError(
+        err?.message || 'Could not access device camera. Please check camera permissions or upload a QR image.'
+      );
+    }
+  };
+
+  // Handle uploading and decoding a QR photo
+  const handleQrImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImageUploading(true);
+    setCameraError(null);
+
+    // 1. First attempt fast in-browser decoding using html5-qrcode file scanner
+    try {
+      const scanner = new Html5Qrcode('qr-reader-viewport-temp');
+      const decodedResult = await scanner.scanFile(file, true);
+      scanner.clear();
+      setImageUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      await handleDecodedCode(decodedResult);
+      return;
+    } catch (browserDecodeErr) {
+      console.log('Client-side QR decode attempt, falling back to server decode:', browserDecodeErr);
+    }
+
+    // 2. Fallback to backend OCR / Jimp QR image reader endpoint
+    try {
+      const res = await verifyQrImageOnline(file);
+      setImageUploading(false);
+      setShowScanner(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      if (res.code) {
+        setCode(res.code);
+      }
+      setQrModalResult(res);
+      if (res.report) {
+        setReport(res.report);
+      }
+      setHasSearched(true);
+    } catch (serverErr: any) {
+      setImageUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      setCameraError(
+        serverErr?.message || 'Could not detect a valid QR code in this image. Please upload a clear photo of the bottle QR code.'
+      );
+    }
+  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,17 +267,43 @@ export const Verify: React.FC = () => {
                     name="batchCode"
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
-                    maxLength={20}
-                    placeholder="e.g. VV-ASH-2026-001"
+                    maxLength={32}
+                    placeholder="e.g. VV-ASH-2026-001 or QR Code"
                     className="w-full bg-transparent font-sans text-sm focus:outline-none text-[var(--color-heading)] placeholder-[rgba(10, 25, 47,0.4)]"
+                  />
+                  {/* Hidden File Input for Direct QR Photo Upload */}
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    onChange={handleQrImageUpload}
+                    className="hidden"
                   />
                   <button
                     type="button"
-                    title="Scan QR Code"
-                    onClick={() => setShowScanner(true)}
+                    title="Upload QR Image"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={imageUploading}
+                    className="p-1.5 hover:bg-[rgba(10,25,47,0.05)] text-[var(--color-navy)] rounded-full transition-colors shrink-0 mr-1 focus:outline-none flex items-center justify-center disabled:opacity-50"
+                  >
+                    {imageUploading ? (
+                      <Loader2 className="w-5 h-5 animate-spin text-[var(--color-navy)]" />
+                    ) : (
+                      <Upload className="w-5 h-5" />
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    title="Open Camera Scanner"
+                    onClick={() => {
+                      setShowScanner(true);
+                      setTimeout(() => {
+                        startCameraScanner();
+                      }, 150);
+                    }}
                     className="p-1.5 hover:bg-[rgba(10,25,47,0.05)] text-[var(--color-navy)] rounded-full transition-colors shrink-0 mr-1 focus:outline-none flex items-center justify-center"
                   >
-                    <QrCode className="w-5 h-5" />
+                    <Camera className="w-5 h-5" />
                   </button>
                 </div>
                 <Button type="submit" variant="primary" className="py-2.5 px-6 shrink-0">
@@ -725,66 +890,111 @@ export const Verify: React.FC = () => {
     );
   }
 
-  // QR Code Scanner Modal
+  // QR Code Scanner & Image Upload Modal
   function renderQrScannerModal() {
-  if (!showScanner) return null;
+    if (!showScanner) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center z-50 p-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 15 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="glass-card-navy border border-white/30 max-w-md w-full p-8 rounded-3xl relative shadow-xl text-center"
-      >
-        <button
-          onClick={() => setShowScanner(false)}
-          className="absolute top-4 right-4 text-white/60 hover:text-white cursor-pointer focus:outline-none"
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 15 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="glass-card-navy border border-white/30 max-w-md w-full p-6 sm:p-8 rounded-3xl relative shadow-2xl text-center"
         >
-          <X className="w-5 h-5" />
-        </button>
+          <button
+            onClick={() => setShowScanner(false)}
+            className="absolute top-4 right-4 text-white/60 hover:text-white cursor-pointer focus:outline-none p-1 rounded-full"
+          >
+            <X className="w-5 h-5" />
+          </button>
 
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <QrCode className="w-6 h-6 text-[var(--color-navy)]" />
-          <h3 className="heading-condensed text-2xl text-white tracking-wide uppercase">
-            Scan Bottle QR Code
-          </h3>
-        </div>
-
-        <p className="font-sans text-xs font-light text-white/70 leading-relaxed mb-6 max-w-xs mx-auto">
-          Align the QR code printed on the side label of your Vedah Vital bottle inside the scanning viewport.
-        </p>
-
-        {/* Animated Viewport */}
-        <div className="relative w-52 h-52 mx-auto mb-8 bg-black/40 border border-white/20 overflow-hidden flex items-center justify-center rounded-2xl">
-          {/* Viewport scan frame brackets */}
-          <div className="absolute top-3 left-3 w-5 h-5 border-t-2 border-l-2 border-[var(--color-navy)]" />
-          <div className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-[var(--color-navy)]" />
-          <div className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-[var(--color-navy)]" />
-          <div className="absolute bottom-3 right-3 w-5 h-5 border-b-2 border-r-2 border-[var(--color-navy)]" />
-
-          {/* Glowing Laser line */}
-          <motion.div
-            animate={{ y: [-70, 70] }}
-            transition={{ duration: 2.2, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
-            className="absolute left-4 right-4 h-0.5 bg-gradient-to-r from-transparent via-[var(--color-navy)] to-transparent shadow-[0_0_8px_rgba(27,54,93,0.8)] z-10"
-          />
-
-          {/* Video camera feedback placeholder */}
-          <div className="flex flex-col items-center gap-2 text-white/40">
-            <Camera className="w-8 h-8 animate-pulse" />
-            <span className="font-sans text-[8px] uppercase tracking-widest">Awaiting feed...</span>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <QrCode className="w-6 h-6 text-white" />
+            <h3 className="heading-condensed text-2xl text-white tracking-wide uppercase">
+              Scan Bottle QR Code
+            </h3>
           </div>
-        </div>
 
-        {/* Camera instructions */}
-        <div className="border border-white/10 bg-white/5 rounded-2xl p-4 text-center">
-          <p className="font-sans text-xs text-white/80 leading-relaxed">
-            Hold your mobile device camera steadily over the bottle QR label. If your browser does not support in-app scanning, use your default camera app to open the link directly, or enter the batch code manually.
+          <p className="font-sans text-xs font-light text-white/70 leading-relaxed mb-6 max-w-xs mx-auto">
+            Point your device camera at the QR code on your Vedah Vital bottle or upload a saved photo.
           </p>
-        </div>
-      </motion.div>
-    </div>
-  );
+
+          {/* Real Camera Viewport Container */}
+          <div className="relative w-64 h-64 mx-auto mb-4 bg-black/60 border border-white/20 overflow-hidden flex items-center justify-center rounded-2xl">
+            {/* HTML5 QR Code Real Video Element is mounted here */}
+            <div id="qr-reader-viewport" className="w-full h-full object-cover [&>video]:h-full [&>video]:w-full [&>video]:object-cover" />
+            {/* Hidden scratchpad container for file scans */}
+            <div id="qr-reader-viewport-temp" className="hidden" />
+
+            {!cameraActive && !cameraError && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/60 bg-black/70">
+                <Camera className="w-10 h-10 animate-pulse text-white/80" />
+                <span className="font-sans text-[10px] uppercase tracking-wider">Starting camera feed...</span>
+              </div>
+            )}
+
+            {/* Glowing Laser line animation when active */}
+            {cameraActive && (
+              <motion.div
+                animate={{ y: [-90, 90] }}
+                transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
+                className="absolute left-4 right-4 h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_10px_rgba(52,211,153,0.9)] z-10 pointer-events-none"
+              />
+            )}
+          </div>
+
+          {/* Camera Error / Permission Notice */}
+          {cameraError && (
+            <div className="mb-4 rounded-xl bg-red-950/60 border border-red-500/40 p-3 text-left flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+              <p className="text-[11px] font-sans text-red-200 leading-relaxed">
+                {cameraError}
+              </p>
+            </div>
+          )}
+
+          {/* Alternative: Direct Upload QR Photo Option */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-white/40 text-xs font-sans my-2">
+              <div className="flex-1 border-t border-white/10" />
+              <span>OR</span>
+              <div className="flex-1 border-t border-white/10" />
+            </div>
+
+            <label className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white text-xs font-medium cursor-pointer transition-colors shadow-sm">
+              {imageUploading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
+                  <span>Decoding QR Image...</span>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-4 h-4 text-white" />
+                  <span>Upload Photo from Gallery / Device</span>
+                </>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                disabled={imageUploading}
+                onChange={handleQrImageUpload}
+                className="hidden"
+              />
+            </label>
+
+            {!cameraActive && (
+              <Button
+                variant="outline"
+                className="w-full text-white border-white/20 hover:bg-white/10 text-xs py-2 justify-center"
+                onClick={() => startCameraScanner()}
+              >
+                Retry Starting Camera
+              </Button>
+            )}
+          </div>
+        </motion.div>
+      </div>
+    );
   }
 }
 

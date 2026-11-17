@@ -172,6 +172,44 @@ export const verifyCodeOnline = async (codeStr: string): Promise<VerificationRes
 };
 
 /**
+ * Uploads an image containing a QR code to backend for automated decoding and verification.
+ */
+export const verifyQrImageOnline = async (file: File): Promise<VerificationResult> => {
+  if (!API_BASE_URL) {
+    return {
+      status: 'NOT_FOUND',
+      verified: false,
+      code: '',
+      message: 'Backend API is not configured.'
+    };
+  }
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const response = await apiClient.post<VerificationResult>('/verify-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 15000,
+    });
+    return response.data;
+  } catch (error: any) {
+    const resp = error.response?.data;
+    if (resp?.status) {
+      return resp;
+    }
+    return {
+      status: 'NOT_FOUND',
+      verified: false,
+      code: '',
+      message: resp?.error || "Could not decode or verify QR code from this image. Please ensure the QR is clear and well-lit."
+    };
+  }
+};
+
+/**
  * Fetches batch report details from backend API with fallback to local mock data.
  */
 export const fetchBatchReport = async (batchCode: string): Promise<LabTestReport | null> => {
