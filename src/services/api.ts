@@ -138,27 +138,29 @@ export const verifyCodeOnline = async (codeStr: string): Promise<VerificationRes
         message: "This product's QR code has previously been scanned."
       };
     }
-    // Fallback if network offline
-    const fallbackMock = LAB_REPORTS[normalizedCode];
-    if (fallbackMock) {
-      return {
-        status: 'GENUINE',
-        verified: true,
-        code: normalizedCode,
-        verificationDate: new Date(),
-        product: {
-          name: 'KSM-66® Ashwagandha Root Extract',
-          brand: 'VEDAH VITAL',
-          strength: '500 mg',
-          blackPepperExtract: '5 mg',
-          packSize: '60 Vegan Capsules',
-          batchNumber: fallbackMock.batchCode,
-          mfgDate: fallbackMock.mfgDate,
-          expDate: fallbackMock.expDate
-        },
-        report: fallbackMock,
-        message: 'Your product has been successfully verified.'
-      };
+    // In local dev when API is not configured, check mock records
+    if (import.meta.env.DEV) {
+      const fallbackMock = LAB_REPORTS[normalizedCode];
+      if (fallbackMock) {
+        return {
+          status: 'GENUINE',
+          verified: true,
+          code: normalizedCode,
+          verificationDate: new Date(),
+          product: {
+            name: 'KSM-66® Ashwagandha Root Extract',
+            brand: 'VEDAH VITAL',
+            strength: '500 mg',
+            blackPepperExtract: '5 mg',
+            packSize: '60 Vegan Capsules',
+            batchNumber: fallbackMock.batchCode,
+            mfgDate: fallbackMock.mfgDate,
+            expDate: fallbackMock.expDate
+          },
+          report: fallbackMock,
+          message: 'Your product has been successfully verified.'
+        };
+      }
     }
     return {
       status: 'NOT_FOUND',

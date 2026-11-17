@@ -5,7 +5,7 @@ import { ShieldCheck, Search, Download, AlertCircle, FileSpreadsheet, FlaskConic
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { Button } from '../components/ui/Button';
-import { LAB_REPORTS, type LabTestReport } from '../lib/mockData';
+import { type LabTestReport } from '../lib/mockData';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 
 import { validateBatchCodeFormat } from '../lib/qrUtils';
@@ -776,82 +776,11 @@ export const Verify: React.FC = () => {
           </div>
         </div>
 
-        {/* Simulation Help Panel */}
-        <div className="border border-white/10 bg-white/5 rounded-2xl p-4 text-left">
-          <span className="font-sans text-[9px] font-bold uppercase tracking-wider text-white/50 block mb-2">
-            Developer QR Simulation (Test All 3 Scenarios)
-          </span>
-          <div className="grid grid-cols-3 gap-2">
-            <Button
-              variant="primary"
-              className="py-2 px-2 text-[9px] justify-center bg-emerald-600 hover:bg-emerald-500"
-              onClick={() => {
-                setShowScanner(false);
-                setQrModalResult({
-                  status: 'GENUINE',
-                  verified: true,
-                  code: 'VV-ASH-2026-001',
-                  verificationDate: new Date(),
-                  product: {
-                    name: 'KSM-66® Ashwagandha Root Extract',
-                    brand: 'VEDAH VITAL',
-                    strength: '500 mg',
-                    blackPepperExtract: '5 mg',
-                    packSize: '60 Vegan Capsules',
-                    batchNumber: 'VV-ASH-2026-001',
-                    mfgDate: '10/05/2026',
-                    expDate: '09/05/2028'
-                  },
-                  report: LAB_REPORTS['VV-ASH-2026-001']
-                });
-                setReport(LAB_REPORTS['VV-ASH-2026-001']);
-                setCode('VV-ASH-2026-001');
-                setHasSearched(true);
-              }}
-            >
-              Scenario A
-            </Button>
-            <Button
-              variant="primary"
-              className="py-2 px-2 text-[9px] justify-center bg-amber-600 hover:bg-amber-500 text-white"
-              onClick={() => {
-                setShowScanner(false);
-                setQrModalResult({
-                  status: 'ALREADY_SCANNED',
-                  verified: false,
-                  code: 'VV-ASH-2026-001',
-                  firstVerificationDate: '2026-05-15T10:30:00Z',
-                  currentScanDate: new Date().toISOString(),
-                  product: {
-                    name: 'KSM-66® Ashwagandha Root Extract',
-                    brand: 'VEDAH VITAL',
-                    strength: '500 mg',
-                    blackPepperExtract: '5 mg',
-                    packSize: '60 Vegan Capsules',
-                    batchNumber: 'VV-ASH-2026-001',
-                    mfgDate: '10/05/2026',
-                    expDate: '09/05/2028'
-                  }
-                });
-              }}
-            >
-              Scenario B
-            </Button>
-            <Button
-              variant="outline"
-              className="py-2 px-2 text-[9px] justify-center text-red-300 border-red-400/40 hover:bg-red-950/30"
-              onClick={() => {
-                setShowScanner(false);
-                setQrModalResult({
-                  status: 'NOT_FOUND',
-                  verified: false,
-                  code: 'VV-INVALID-9999'
-                });
-              }}
-            >
-              Scenario C
-            </Button>
-          </div>
+        {/* Camera instructions */}
+        <div className="border border-white/10 bg-white/5 rounded-2xl p-4 text-center">
+          <p className="font-sans text-xs text-white/80 leading-relaxed">
+            Hold your mobile device camera steadily over the bottle QR label. If your browser does not support in-app scanning, use your default camera app to open the link directly, or enter the batch code manually.
+          </p>
         </div>
       </motion.div>
     </div>

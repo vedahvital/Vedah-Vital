@@ -3,14 +3,14 @@
  * Used by Frontend & CMS to build standardized QR verification links and validate batch formats.
  */
 
-export const BATCH_CODE_REGEX = /^VV-[A-Z]{3,4}-\d{4}-\d{3}$/;
+export const BATCH_CODE_REGEX = /^(VV-[A-Z]{3,4}-\d{4}-\d{3}|VV-[A-F0-9]{16,32}|[A-Z0-9_-]{6,32})$/i;
 
 /**
- * Validates whether a batch code matches strict Vedah Vital syntax (e.g. VV-ASH-2026-001).
+ * Validates whether a batch code matches Vedah Vital batch syntax (e.g. VV-ASH-2026-001 or VV-4a8f9c...).
  */
 export const validateBatchCodeFormat = (batchCode: string): boolean => {
   if (!batchCode) return false;
-  return BATCH_CODE_REGEX.test(batchCode.trim().toUpperCase());
+  return BATCH_CODE_REGEX.test(batchCode.trim());
 };
 
 /**
