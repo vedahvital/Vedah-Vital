@@ -9,7 +9,6 @@ import { Button } from '../components/ui/Button';
 import { type LabTestReport } from '../lib/mockData';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 
-import { validateBatchCodeFormat } from '../lib/qrUtils';
 import { verifyCodeOnline, verifyQrImageOnline, type VerificationResult } from '../services/api';
 
 export const Verify: React.FC = () => {
@@ -17,13 +16,7 @@ export const Verify: React.FC = () => {
     if (typeof window === 'undefined') return '';
     const params = new URLSearchParams(window.location.search);
     const batchParam = params.get('batch');
-    const sourceParam = params.get('source');
-    if (sourceParam === 'qr' && batchParam) {
-      const trimmed = batchParam.trim().toUpperCase();
-      // Guard against malformed QR scans
-      return validateBatchCodeFormat(trimmed) ? trimmed : '';
-    }
-    return '';
+    return batchParam ? batchParam.trim() : '';
   });
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<LabTestReport | null>(null);
@@ -38,21 +31,26 @@ export const Verify: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
 
-  // Initialize and verify from QR URL on mount
+  // Initialize and verify from QR or direct batch URL on mount
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
     const batchParam = params.get('batch');
-    const sourceParam = params.get('source');
 
-    if (sourceParam === 'qr' && batchParam) {
-      const targetCode = batchParam.trim().toUpperCase();
+    if (batchParam) {
+      const targetCode = batchParam.trim();
+      setLoading(true);
+      setHasSearched(true);
       // Execute online verification against backend
       verifyCodeOnline(targetCode).then((res) => {
+        setLoading(false);
         setQrModalResult(res);
         if (res.report) {
           setReport(res.report);
         }
+      }).catch((err) => {
+        setLoading(false);
+        setError(err?.message || 'Verification failed.');
       });
 
       // Clean query params from address bar
