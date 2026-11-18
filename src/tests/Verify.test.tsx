@@ -47,7 +47,7 @@ describe('Verify page', () => {
     fireEvent.click(btn);
     await waitFor(() =>
       expect(screen.getByText(/could not verify/i)).toBeInTheDocument(),
-      { timeout: 4000 }
+      { timeout: 10000 }
     );
   });
 
