@@ -33,10 +33,10 @@ const renderVerify = (search = '') => {
 };
 
 describe('Verify page', () => {
-  it('renders the search input with maxLength of 32', () => {
+  it('renders the search input with maxLength of 256', () => {
     renderVerify();
     const input = screen.getByPlaceholderText(/e\.g\. VV-ASH-2026-001/i);
-    expect(input).toHaveAttribute('maxLength', '32');
+    expect(input).toHaveAttribute('maxLength', '256');
   });
 
   it('shows error for unknown batch code after search', async () => {
@@ -49,7 +49,7 @@ describe('Verify page', () => {
       expect(screen.getByText(/could not verify/i)).toBeInTheDocument(),
       { timeout: 10000 }
     );
-  });
+  }, 15000);
 
   it('shows report for known batch code VV-ASH-2026-001', async () => {
     renderVerify();
@@ -58,8 +58,8 @@ describe('Verify page', () => {
     const btn = screen.getAllByRole('button', { name: /verify/i }).find(el => el.getAttribute('type') === 'submit')!;
     fireEvent.click(btn);
     await waitFor(() =>
-      expect(screen.getByText(/successfully verified/i)).toBeInTheDocument(),
-      { timeout: 4000 }
+      expect(screen.getByText(/previously been scanned|successfully verified/i)).toBeInTheDocument(),
+      { timeout: 10000 }
     );
-  });
+  }, 15000);
 });

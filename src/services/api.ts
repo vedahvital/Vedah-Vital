@@ -43,9 +43,11 @@ export interface VerificationProduct {
 export type VerificationStatus = 'GENUINE' | 'ALREADY_SCANNED' | 'NOT_FOUND' | 'INVALID';
 
 export interface LabReportsImages {
-  potency: string[];
-  heavyMetals: string[];
-  microbial: string[];
+  potency?: string[];
+  heavyMetalsMicrobial?: string[];
+  allergens?: string[];
+  heavyMetals?: string[];
+  microbial?: string[];
 }
 
 export interface VerificationResult {
@@ -66,7 +68,7 @@ export interface VerificationResult {
  * Verifies QR code or batch number against backend with support for all 3 verification scenarios.
  */
 export const verifyCodeOnline = async (codeStr: string): Promise<VerificationResult> => {
-  const normalizedCode = codeStr.trim().toUpperCase();
+  let normalizedCode = codeStr.trim();
   if (!normalizedCode) {
     return {
       status: 'INVALID',
@@ -74,6 +76,17 @@ export const verifyCodeOnline = async (codeStr: string): Promise<VerificationRes
       code: '',
       message: 'Please provide a valid identification code.'
     };
+  }
+
+  // If query is full URL (e.g. pasted URL), extract batch query parameter
+  try {
+    if (normalizedCode.includes('?')) {
+      const url = new URL(normalizedCode, window.location.origin);
+      const b = url.searchParams.get('batch');
+      if (b) normalizedCode = b.trim();
+    }
+  } catch {
+    // not a URL
   }
 
   if (!API_BASE_URL) {
