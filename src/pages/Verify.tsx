@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Search, Download, AlertCircle, FileSpreadsheet, FlaskConical, Award, QrCode, Camera, Upload, X, Loader2 } from 'lucide-react';
+import { ShieldCheck, Search, Download, AlertCircle, FileSpreadsheet, FlaskConical, Award, QrCode, Camera, Upload, X, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
@@ -25,11 +25,78 @@ export const Verify: React.FC = () => {
 
   const [showScanner, setShowScanner] = useState(false);
   const [qrModalResult, setQrModalResult] = useState<VerificationResult | null>(null);
+  const [showStatusModal, setShowStatusModal] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [imageUploading, setImageUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
+
+  interface LightboxState {
+    category: 'potency' | 'heavyMetals' | 'microbial';
+    categoryTitle: string;
+    images: string[];
+    currentIndex: number;
+  }
+  const [lightbox, setLightbox] = useState<LightboxState | null>(null);
+
+  // Keyboard navigation for image lightbox
+  useEffect(() => {
+    if (!lightbox) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setLightbox(null);
+      } else if (e.key === 'ArrowLeft' && lightbox.images.length > 1) {
+        setLightbox((prev) =>
+          prev
+            ? {
+                ...prev,
+                currentIndex: (prev.currentIndex - 1 + prev.images.length) % prev.images.length,
+              }
+            : null
+        );
+      } else if (e.key === 'ArrowRight' && lightbox.images.length > 1) {
+        setLightbox((prev) =>
+          prev
+            ? {
+                ...prev,
+                currentIndex: (prev.currentIndex + 1) % prev.images.length,
+              }
+            : null
+        );
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightbox]);
+
+  const handleDownloadImage = (dataUrl: string, filename: string) => {
+    try {
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.warn('Download error:', err);
+    }
+  };
+
+  const openLightbox = (
+    category: 'potency' | 'heavyMetals' | 'microbial',
+    categoryTitle: string,
+    images: string[],
+    index: number
+  ) => {
+    if (!images || !images.length) return;
+    setLightbox({
+      category,
+      categoryTitle,
+      images,
+      currentIndex: Math.max(0, Math.min(index, images.length - 1)),
+    });
+  };
 
   // Initialize and verify from QR or direct batch URL on mount
   useEffect(() => {
@@ -45,6 +112,7 @@ export const Verify: React.FC = () => {
       verifyCodeOnline(targetCode).then((res) => {
         setLoading(false);
         setQrModalResult(res);
+        setShowStatusModal(true);
         if (res.report) {
           setReport(res.report);
         }
@@ -102,6 +170,7 @@ export const Verify: React.FC = () => {
       const res = await verifyCodeOnline(cleanCode);
       setLoading(false);
       setQrModalResult(res);
+      setShowStatusModal(true);
       if (res.report) setReport(res.report);
     } catch (err: any) {
       setLoading(false);
@@ -179,6 +248,7 @@ export const Verify: React.FC = () => {
         setCode(res.code);
       }
       setQrModalResult(res);
+      setShowStatusModal(true);
       if (res.report) {
         setReport(res.report);
       }
@@ -206,6 +276,7 @@ export const Verify: React.FC = () => {
       const res = await verifyCodeOnline(query);
       setLoading(false);
       setQrModalResult(res);
+      setShowStatusModal(true);
       if (res.report) {
         setReport(res.report);
       }
@@ -483,6 +554,63 @@ export const Verify: React.FC = () => {
                 </motion.div>
               )}
 
+              {/* If verified via backend without mock report, render verified batch summary */}
+              {!report && qrModalResult && qrModalResult.verified && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  className="glass-card-navy p-6 md:p-10 relative overflow-hidden text-left shadow-sm rounded-3xl mb-8"
+                >
+                  <div className="absolute right-6 top-6 pointer-events-none select-none opacity-[0.05] text-[var(--color-navy)]">
+                    <Award className="w-28 h-28 stroke-[1]" />
+                  </div>
+
+                  {/* Status header */}
+                  <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[rgba(10, 25, 47,0.15)] pb-6 mb-8">
+                    <div>
+                      <span className="inline-flex items-center gap-1.5 text-[8px] font-semibold tracking-widest uppercase border border-emerald-600/25 bg-emerald-500/10 text-emerald-800 px-3 py-1.5 mb-3 rounded-full">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                        Authentic Product Verified
+                      </span>
+                      <h2 className="font-sans text-xl font-semibold uppercase tracking-wide text-[var(--color-heading)]">
+                        {qrModalResult.product?.name || 'KSM-66® Ashwagandha Root Extract'}
+                      </h2>
+                      <span className="font-sans text-xs font-semibold uppercase tracking-widest block mt-1 text-[var(--color-navy)]">
+                        Batch Code: {qrModalResult.product?.batchNumber || qrModalResult.code}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Batch Info Grid */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-6 border-b border-[rgba(10, 25, 47,0.15)] pb-6">
+                    {[
+                      { k: 'Brand', v: qrModalResult.product?.brand || 'VEDAH VITAL' },
+                      { k: 'Strength', v: qrModalResult.product?.strength || '500 mg' },
+                      { k: 'Bio-Enhancer', v: `${qrModalResult.product?.blackPepperExtract || '5 mg'} Piperine` },
+                      { k: 'Pack Size', v: qrModalResult.product?.packSize || '60 Vegan Capsules' },
+                      { k: 'MFG Date', v: qrModalResult.product?.mfgDate || '—' },
+                      { k: 'EXP Date', v: qrModalResult.product?.expDate || '—' },
+                      { k: 'Verification Date', v: qrModalResult.verificationDate ? new Date(qrModalResult.verificationDate).toLocaleDateString('en-GB') : 'Verified' },
+                      { k: 'Purity Standard', v: 'ISO & cGMP Certified' },
+                    ].map(({ k, v }) => (
+                      <div key={k}>
+                        <span className="text-[9px] font-sans font-semibold uppercase tracking-widest block mb-1 text-[var(--color-navy)]">
+                          {k}
+                        </span>
+                        <span className="font-sans text-sm font-semibold text-[var(--color-heading)]">
+                          {v}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="text-center border-t border-[rgba(10, 25, 47,0.15)] pt-4 text-[9px] font-sans uppercase tracking-[0.2em] text-[var(--color-text)] opacity-70">
+                    Verified Authentic • ISO-Accredited Third Party Laboratory Analysis
+                  </div>
+                </motion.div>
+              )}
+
               {/* Lab Reports Images Section (Uploaded via CMS: Potency, Heavy Metals, Microbial) */}
               {qrModalResult?.labReports && (
                 (qrModalResult.labReports.potency?.length > 0 ||
@@ -490,6 +618,7 @@ export const Verify: React.FC = () => {
                  qrModalResult.labReports.microbial?.length > 0)
               ) && (
                 <motion.div
+                  id="attached-lab-reports-section"
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
@@ -501,7 +630,7 @@ export const Verify: React.FC = () => {
                       Scanned Lab Test Documents & Assays
                     </h3>
                     <p className="font-sans text-xs text-slate-600 mt-1">
-                      High-resolution third-party lab documentation for batch verification. Click on any certificate to view or download.
+                      High-resolution third-party lab documentation for batch verification. Click on any certificate image to preview full-screen or download.
                     </p>
                   </div>
 
@@ -517,22 +646,25 @@ export const Verify: React.FC = () => {
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                           {qrModalResult.labReports.potency.map((imgUrl, i) => (
-                            <a
+                            <button
                               key={i}
-                              href={imgUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="group relative aspect-[3/4] overflow-hidden rounded-xl border border-[rgba(10,25,47,0.15)] bg-slate-100 hover:shadow-md transition-shadow"
+                              type="button"
+                              onClick={() => openLightbox('potency', 'Active Potency Assay Certificate', qrModalResult.labReports!.potency, i)}
+                              className="group relative aspect-[3/4] overflow-hidden rounded-xl border border-[rgba(10,25,47,0.15)] bg-slate-100 hover:shadow-lg hover:border-[var(--color-navy)] transition-all cursor-pointer text-left focus:outline-none"
                             >
                               <img
                                 src={imgUrl}
                                 alt={`Potency assay certificate page ${i + 1}`}
                                 className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                               />
-                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-semibold gap-1">
-                                <Search className="w-3.5 h-3.5" /> View
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[11px] font-semibold gap-1">
+                                <Search className="w-4 h-4" />
+                                <span>Preview</span>
                               </div>
-                            </a>
+                              <div className="absolute bottom-2 left-2 rounded bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white">
+                                Page {i + 1}
+                              </div>
+                            </button>
                           ))}
                         </div>
                       </div>
@@ -549,22 +681,25 @@ export const Verify: React.FC = () => {
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                           {qrModalResult.labReports.heavyMetals.map((imgUrl, i) => (
-                            <a
+                            <button
                               key={i}
-                              href={imgUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="group relative aspect-[3/4] overflow-hidden rounded-xl border border-[rgba(10,25,47,0.15)] bg-slate-100 hover:shadow-md transition-shadow"
+                              type="button"
+                              onClick={() => openLightbox('heavyMetals', 'Heavy Metals & Toxins Audit Certificate', qrModalResult.labReports!.heavyMetals, i)}
+                              className="group relative aspect-[3/4] overflow-hidden rounded-xl border border-[rgba(10,25,47,0.15)] bg-slate-100 hover:shadow-lg hover:border-[var(--color-navy)] transition-all cursor-pointer text-left focus:outline-none"
                             >
                               <img
                                 src={imgUrl}
                                 alt={`Heavy metals test page ${i + 1}`}
                                 className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                               />
-                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-semibold gap-1">
-                                <Search className="w-3.5 h-3.5" /> View
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[11px] font-semibold gap-1">
+                                <Search className="w-4 h-4" />
+                                <span>Preview</span>
                               </div>
-                            </a>
+                              <div className="absolute bottom-2 left-2 rounded bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white">
+                                Page {i + 1}
+                              </div>
+                            </button>
                           ))}
                         </div>
                       </div>
@@ -581,22 +716,25 @@ export const Verify: React.FC = () => {
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                           {qrModalResult.labReports.microbial.map((imgUrl, i) => (
-                            <a
+                            <button
                               key={i}
-                              href={imgUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="group relative aspect-[3/4] overflow-hidden rounded-xl border border-[rgba(10,25,47,0.15)] bg-slate-100 hover:shadow-md transition-shadow"
+                              type="button"
+                              onClick={() => openLightbox('microbial', 'Microbial Screening Certificate', qrModalResult.labReports!.microbial, i)}
+                              className="group relative aspect-[3/4] overflow-hidden rounded-xl border border-[rgba(10,25,47,0.15)] bg-slate-100 hover:shadow-lg hover:border-[var(--color-navy)] transition-all cursor-pointer text-left focus:outline-none"
                             >
                               <img
                                 src={imgUrl}
                                 alt={`Microbial screening page ${i + 1}`}
                                 className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                               />
-                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-semibold gap-1">
-                                <Search className="w-3.5 h-3.5" /> View
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[11px] font-semibold gap-1">
+                                <Search className="w-4 h-4" />
+                                <span>Preview</span>
                               </div>
-                            </a>
+                              <div className="absolute bottom-2 left-2 rounded bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white">
+                                Page {i + 1}
+                              </div>
+                            </button>
                           ))}
                         </div>
                       </div>
@@ -626,6 +764,7 @@ export const Verify: React.FC = () => {
 
       {renderQrStatusModal()}
       {renderQrScannerModal()}
+      {renderLightboxModal()}
 
       <Footer />
     </>
@@ -633,7 +772,7 @@ export const Verify: React.FC = () => {
 
   // Popup verified/fake/repeat modal overlay according to exact Scenario A, B, and C
   function renderQrStatusModal() {
-    if (!qrModalResult) return null;
+    if (!showStatusModal || !qrModalResult) return null;
 
     const { status, code: targetCode, product, firstVerificationDate, currentScanDate, report: matchedReport } = qrModalResult;
 
@@ -652,17 +791,23 @@ export const Verify: React.FC = () => {
       }
     };
 
+    const hasLabReports = qrModalResult.labReports && (
+      (qrModalResult.labReports.potency?.length || 0) +
+      (qrModalResult.labReports.heavyMetals?.length || 0) +
+      (qrModalResult.labReports.microbial?.length || 0) > 0
+    );
+
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="bg-white border border-[rgba(10,25,47,0.15)] max-w-lg w-full p-8 rounded-3xl relative shadow-2xl text-left"
+          className="bg-white border border-[rgba(10,25,47,0.15)] max-w-lg w-full p-6 sm:p-8 rounded-3xl relative shadow-2xl text-left max-h-[90vh] overflow-y-auto"
         >
           {/* Close button */}
           <button
-            onClick={() => setQrModalResult(null)}
-            className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 transition-colors p-1 rounded-full"
+            onClick={() => setShowStatusModal(false)}
+            className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 transition-colors p-1 rounded-full cursor-pointer"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -687,7 +832,7 @@ export const Verify: React.FC = () => {
                 </p>
               </div>
 
-              <div className="space-y-2 py-3 bg-slate-50/80 rounded-2xl p-5 border border-slate-100 text-sm font-sans mb-6">
+              <div className="space-y-2 py-3 bg-slate-50/80 rounded-2xl p-5 border border-slate-100 text-sm font-sans mb-5">
                 <div className="font-semibold text-slate-900 border-b border-slate-200/60 pb-2">
                   Product: {product?.name || 'KSM-66® Ashwagandha Root Extract'}
                 </div>
@@ -723,32 +868,77 @@ export const Verify: React.FC = () => {
                 </ul>
               </div>
 
-              <div className="text-center font-sans text-xs text-slate-500 mb-6 border-t border-slate-100 pt-3">
-                <p className="font-medium text-slate-700">Thank you for choosing VEDAH VITAL.</p>
-                <p className="italic text-slate-400 mt-0.5">Rooted in Nature. Made with Intention.</p>
-              </div>
+              {/* Lab Reports Preview Strip inside modal */}
+              {hasLabReports && (
+                <div className="mb-5 rounded-2xl bg-emerald-50/50 p-4 border border-emerald-100">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
+                      <FlaskConical className="w-3.5 h-3.5 text-emerald-600" />
+                      Attached Lab Certificates
+                    </span>
+                    <span className="text-[10px] text-emerald-600 font-medium">Click thumbnail to preview</span>
+                  </div>
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {qrModalResult.labReports!.potency?.map((img, i) => (
+                      <button
+                        key={`potency-m-${i}`}
+                        type="button"
+                        onClick={() => openLightbox('potency', 'Active Potency Assay Certificate', qrModalResult.labReports!.potency, i)}
+                        className="group relative h-14 w-12 shrink-0 overflow-hidden rounded-lg border border-emerald-200 bg-white hover:ring-2 hover:ring-emerald-500 transition-all cursor-pointer"
+                        title="Preview Potency Certificate"
+                      >
+                        <img src={img} alt={`Potency #${i + 1}`} className="h-full w-full object-cover" />
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-[9px] font-bold">
+                          #{i + 1}
+                        </div>
+                      </button>
+                    ))}
+                    {qrModalResult.labReports!.heavyMetals?.map((img, i) => (
+                      <button
+                        key={`hm-m-${i}`}
+                        type="button"
+                        onClick={() => openLightbox('heavyMetals', 'Heavy Metals & Toxins Audit Certificate', qrModalResult.labReports!.heavyMetals, i)}
+                        className="group relative h-14 w-12 shrink-0 overflow-hidden rounded-lg border border-emerald-200 bg-white hover:ring-2 hover:ring-emerald-500 transition-all cursor-pointer"
+                        title="Preview Heavy Metals Certificate"
+                      >
+                        <img src={img} alt={`Heavy metals #${i + 1}`} className="h-full w-full object-cover" />
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-[9px] font-bold">
+                          #{i + 1}
+                        </div>
+                      </button>
+                    ))}
+                    {qrModalResult.labReports!.microbial?.map((img, i) => (
+                      <button
+                        key={`micro-m-${i}`}
+                        type="button"
+                        onClick={() => openLightbox('microbial', 'Microbial Screening Certificate', qrModalResult.labReports!.microbial, i)}
+                        className="group relative h-14 w-12 shrink-0 overflow-hidden rounded-lg border border-emerald-200 bg-white hover:ring-2 hover:ring-emerald-500 transition-all cursor-pointer"
+                        title="Preview Microbial Certificate"
+                      >
+                        <img src={img} alt={`Microbial #${i + 1}`} className="h-full w-full object-cover" />
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-[9px] font-bold">
+                          #{i + 1}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="flex flex-col gap-2.5">
-                {qrModalResult.labReports && (
-                  qrModalResult.labReports.potency?.length > 0 ||
-                  qrModalResult.labReports.heavyMetals?.length > 0 ||
-                  qrModalResult.labReports.microbial?.length > 0
-                ) && (
+                {hasLabReports && (
                   <Button
                     variant="outline"
-                    className="w-full border-[var(--color-navy)]/30 text-[var(--color-navy)] hover:bg-[var(--color-navy-light)] py-2.5 text-xs font-semibold"
+                    className="w-full border-[var(--color-navy)]/30 text-[var(--color-navy)] hover:bg-[var(--color-navy-light)] py-2.5 text-xs font-semibold justify-center cursor-pointer"
                     onClick={() => {
-                      setQrModalResult(null);
+                      setShowStatusModal(false);
                       setTimeout(() => {
-                        window.scrollTo({ top: 600, behavior: 'smooth' });
+                        const sec = document.getElementById('attached-lab-reports-section');
+                        sec?.scrollIntoView({ behavior: 'smooth' });
                       }, 100);
                     }}
                   >
-                    View Attached Lab Report Certificates ({
-                      (qrModalResult.labReports.potency?.length || 0) +
-                      (qrModalResult.labReports.heavyMetals?.length || 0) +
-                      (qrModalResult.labReports.microbial?.length || 0)
-                    } images)
+                    View All Attached Lab Reports on Page
                   </Button>
                 )}
                 {matchedReport && (
@@ -761,8 +951,8 @@ export const Verify: React.FC = () => {
                 )}
                 <Button
                   variant="outline"
-                  className="w-full border-slate-200 text-slate-700 hover:bg-slate-50 py-2.5 text-xs"
-                  onClick={() => setQrModalResult(null)}
+                  className="w-full border-slate-200 text-slate-700 hover:bg-slate-50 py-2.5 text-xs justify-center cursor-pointer"
+                  onClick={() => setShowStatusModal(false)}
                 >
                   Close & Explore Website
                 </Button>
@@ -805,6 +995,60 @@ export const Verify: React.FC = () => {
                 </ul>
               </div>
 
+              {/* Lab Reports Preview Strip for Scenario B */}
+              {hasLabReports && (
+                <div className="mb-5 rounded-2xl bg-amber-50/50 p-4 border border-amber-200/60">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                      <FlaskConical className="w-3.5 h-3.5 text-amber-700" />
+                      Batch Lab Certificates
+                    </span>
+                    <span className="text-[10px] text-amber-700 font-medium">Click thumbnail to preview</span>
+                  </div>
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {qrModalResult.labReports!.potency?.map((img, i) => (
+                      <button
+                        key={`potency-b-${i}`}
+                        type="button"
+                        onClick={() => openLightbox('potency', 'Active Potency Assay Certificate', qrModalResult.labReports!.potency, i)}
+                        className="group relative h-14 w-12 shrink-0 overflow-hidden rounded-lg border border-amber-300 bg-white hover:ring-2 hover:ring-amber-500 transition-all cursor-pointer"
+                      >
+                        <img src={img} alt={`Potency #${i + 1}`} className="h-full w-full object-cover" />
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-[9px] font-bold">
+                          #{i + 1}
+                        </div>
+                      </button>
+                    ))}
+                    {qrModalResult.labReports!.heavyMetals?.map((img, i) => (
+                      <button
+                        key={`hm-b-${i}`}
+                        type="button"
+                        onClick={() => openLightbox('heavyMetals', 'Heavy Metals & Toxins Audit Certificate', qrModalResult.labReports!.heavyMetals, i)}
+                        className="group relative h-14 w-12 shrink-0 overflow-hidden rounded-lg border border-amber-300 bg-white hover:ring-2 hover:ring-amber-500 transition-all cursor-pointer"
+                      >
+                        <img src={img} alt={`Heavy metals #${i + 1}`} className="h-full w-full object-cover" />
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-[9px] font-bold">
+                          #{i + 1}
+                        </div>
+                      </button>
+                    ))}
+                    {qrModalResult.labReports!.microbial?.map((img, i) => (
+                      <button
+                        key={`micro-b-${i}`}
+                        type="button"
+                        onClick={() => openLightbox('microbial', 'Microbial Screening Certificate', qrModalResult.labReports!.microbial, i)}
+                        className="group relative h-14 w-12 shrink-0 overflow-hidden rounded-lg border border-amber-300 bg-white hover:ring-2 hover:ring-amber-500 transition-all cursor-pointer"
+                      >
+                        <img src={img} alt={`Microbial #${i + 1}`} className="h-full w-full object-cover" />
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-[9px] font-bold">
+                          #{i + 1}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="text-xs font-sans text-slate-600 space-y-2 mb-6">
                 <p>If you have just purchased this product, please contact VEDAH VITAL customer support.</p>
                 <p className="text-[11px] text-slate-500 italic">
@@ -823,8 +1067,8 @@ export const Verify: React.FC = () => {
                 </a>
                 <Button
                   variant="outline"
-                  className="w-full border-slate-200 text-slate-700 hover:bg-slate-50 py-2.5 text-xs"
-                  onClick={() => setQrModalResult(null)}
+                  className="w-full border-slate-200 text-slate-700 hover:bg-slate-50 py-2.5 text-xs justify-center cursor-pointer"
+                  onClick={() => setShowStatusModal(false)}
                 >
                   Dismiss Notice
                 </Button>
@@ -870,8 +1114,9 @@ export const Verify: React.FC = () => {
                 </a>
                 <Button
                   variant="outline"
-                  className="w-full border-slate-200 text-slate-700 hover:bg-slate-50 py-2.5 text-xs"
+                  className="w-full border-slate-200 text-slate-700 hover:bg-slate-50 py-2.5 text-xs justify-center cursor-pointer"
                   onClick={() => {
+                    setShowStatusModal(false);
                     setQrModalResult(null);
                     setCode(targetCode || '');
                     const el = document.getElementById('batch-code-input');
@@ -884,6 +1129,128 @@ export const Verify: React.FC = () => {
             </div>
           )}
         </motion.div>
+      </div>
+    );
+  }
+
+  // Fullscreen Certificate Lightbox Modal
+  function renderLightboxModal() {
+    if (!lightbox) return null;
+
+    return (
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Certificate Image Preview"
+        className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex flex-col justify-between p-3 sm:p-6 select-none"
+        onClick={() => setLightbox(null)}
+      >
+        {/* Lightbox Header */}
+        <div
+          className="flex items-center justify-between border-b border-white/15 pb-3 text-white max-w-5xl w-full mx-auto shrink-0"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div>
+            <span className="eyebrow text-emerald-400 block text-[10px] tracking-widest font-semibold">
+              OFFICIAL LABORATORY CERTIFICATE
+            </span>
+            <h3 className="font-sans text-sm sm:text-base font-bold text-white tracking-wide">
+              {lightbox.categoryTitle}
+              {lightbox.images.length > 1 && (
+                <span className="ml-2 font-normal text-xs text-white/60">
+                  (Page {lightbox.currentIndex + 1} of {lightbox.images.length})
+                </span>
+              )}
+            </h3>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const currentImg = lightbox.images[lightbox.currentIndex];
+                const ext = currentImg.includes('image/png') ? 'png' : 'jpg';
+                handleDownloadImage(currentImg, `vedah-vital-${lightbox.category}-report-p${lightbox.currentIndex + 1}.${ext}`);
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Download</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setLightbox(null)}
+              className="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+              aria-label="Close Preview"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+        {/* Lightbox Main Image Area */}
+        <div
+          className="flex-1 flex items-center justify-center relative w-full max-w-5xl mx-auto my-3 overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {lightbox.images.length > 1 && (
+            <button
+              type="button"
+              onClick={() => setLightbox({
+                ...lightbox,
+                currentIndex: (lightbox.currentIndex - 1 + lightbox.images.length) % lightbox.images.length
+              })}
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 p-2.5 sm:p-3 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 transition-all shadow-xl cursor-pointer"
+              aria-label="Previous Page"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+          )}
+
+          <img
+            src={lightbox.images[lightbox.currentIndex]}
+            alt={`${lightbox.categoryTitle} Page ${lightbox.currentIndex + 1}`}
+            className="max-h-[75vh] max-w-[92vw] object-contain rounded-lg shadow-2xl transition-all"
+          />
+
+          {lightbox.images.length > 1 && (
+            <button
+              type="button"
+              onClick={() => setLightbox({
+                ...lightbox,
+                currentIndex: (lightbox.currentIndex + 1) % lightbox.images.length
+              })}
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 p-2.5 sm:p-3 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 transition-all shadow-xl cursor-pointer"
+              aria-label="Next Page"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          )}
+        </div>
+
+        {/* Lightbox Footer Filmstrip */}
+        {lightbox.images.length > 1 && (
+          <div
+            className="flex justify-center gap-2 overflow-x-auto py-2 max-w-5xl w-full mx-auto shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {lightbox.images.map((thumb, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setLightbox({ ...lightbox, currentIndex: idx })}
+                className={`relative h-14 w-11 shrink-0 rounded-md overflow-hidden border-2 transition-all cursor-pointer ${
+                  idx === lightbox.currentIndex ? 'border-emerald-400 scale-105 ring-2 ring-emerald-400/40' : 'border-white/30 opacity-60 hover:opacity-100'
+                }`}
+              >
+                <img src={thumb} alt={`Page ${idx + 1}`} className="h-full w-full object-cover" />
+                <span className="absolute bottom-0 right-0 bg-black/70 text-[8px] text-white px-1 font-mono">
+                  {idx + 1}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
