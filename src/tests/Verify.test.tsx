@@ -33,32 +33,32 @@ const renderVerify = (search = '') => {
 };
 
 describe('Verify page', () => {
-  it('renders the search input with maxLength of 20', () => {
+  it('renders the search input with maxLength of 32', () => {
     renderVerify();
-    const input = screen.getByPlaceholderText('e.g. VV-ASH-2026-001');
-    expect(input).toHaveAttribute('maxLength', '20');
+    const input = screen.getByPlaceholderText(/e\.g\. VV-ASH-2026-001/i);
+    expect(input).toHaveAttribute('maxLength', '32');
   });
 
   it('shows error for unknown batch code after search', async () => {
     renderVerify();
-    const input = screen.getByPlaceholderText('e.g. VV-ASH-2026-001');
+    const input = screen.getByPlaceholderText(/e\.g\. VV-ASH-2026-001/i);
     fireEvent.change(input, { target: { value: 'VV-FAKE-9999-999' } });
     const btn = screen.getAllByRole('button', { name: /verify/i }).find(el => el.getAttribute('type') === 'submit')!;
     fireEvent.click(btn);
     await waitFor(() =>
-      expect(screen.getByText(/batch code not found/i)).toBeInTheDocument(),
+      expect(screen.getByText(/could not verify/i)).toBeInTheDocument(),
       { timeout: 4000 }
     );
   });
 
   it('shows report for known batch code VV-ASH-2026-001', async () => {
     renderVerify();
-    const input = screen.getByPlaceholderText('e.g. VV-ASH-2026-001');
+    const input = screen.getByPlaceholderText(/e\.g\. VV-ASH-2026-001/i);
     fireEvent.change(input, { target: { value: 'VV-ASH-2026-001' } });
     const btn = screen.getAllByRole('button', { name: /verify/i }).find(el => el.getAttribute('type') === 'submit')!;
     fireEvent.click(btn);
     await waitFor(() =>
-      expect(screen.getByText(/certificate of analysis/i)).toBeInTheDocument(),
+      expect(screen.getByText(/successfully verified/i)).toBeInTheDocument(),
       { timeout: 4000 }
     );
   });
