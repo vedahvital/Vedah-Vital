@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { LAB_REPORTS, type LabTestReport } from '../lib/mockData';
 
-const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+const DEFAULT_BACKEND_URL = 'https://vedah-vital-backend.vercel.app';
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || DEFAULT_BACKEND_URL;
 const API_BASE_URL = rawBaseUrl
   ? rawBaseUrl.endsWith('/api/public')
     ? rawBaseUrl
     : `${rawBaseUrl.replace(/\/$/, '')}/api/public`
-  : '';
+  : `${DEFAULT_BACKEND_URL}/api/public`;
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
